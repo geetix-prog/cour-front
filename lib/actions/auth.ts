@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { apiPost } from "@/lib/api/client";
 import { setSession } from "@/lib/session";
 import type { AuthResponse } from "@/lib/api/types";
+import { cookies } from "next/headers";
 
 export type LoginState = { error?: string };
 
@@ -18,4 +19,9 @@ export async function login(_prev: LoginState, form: FormData): Promise<LoginSta
   }
   await setSession(auth.token);
   redirect("/");
+}
+
+
+export async function logout() {
+  (await cookies()).delete('session')
 }
