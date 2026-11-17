@@ -1,12 +1,20 @@
 import { apiGet } from "@/lib/api/client";
 import type { DropPage } from "@/lib/api/types";
 
-type Props = { category: Promise<string | string[] | undefined> };
+type Props = {
+  category: Promise<string | string[] | undefined>;
+  q: Promise<string | string[] | undefined>;
+};
 
 export default async function DropList(props: Props) {
   const category = await props.category;
-  const url = typeof category === "string" ? `/drops?category=${category}` : "/drops";
-  const { items } = await apiGet<DropPage>(url);
+  const q = await props.q;
+
+  const params = new URLSearchParams();
+  if (typeof category === "string") params.set("category", category);
+  if (typeof q === "string" && q !== "") params.set("q", q);
+
+  const { items } = await apiGet<DropPage>(`/drops?${params}`);
 
   if (items.length === 0) {
     return <p className="text-gray-500">Aucun drop pour le moment.</p>;
