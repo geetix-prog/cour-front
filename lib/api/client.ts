@@ -1,7 +1,10 @@
 import "server-only";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
-export async function apiGet<T>(path: string, token?: string) {
+export async function apiGet<T>(path: string) {
+  const token = (await cookies()).get('session')?.value
+  
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
     method: "GET",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
