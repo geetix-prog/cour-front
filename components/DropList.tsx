@@ -23,7 +23,7 @@ export default async function DropList(props: Props) {
   return (
     <ul className="flex w-full flex-col gap-4">
       {items.map((drop) => (
-        <li key={drop.id} className="rounded-lg bg-secondary/75 p-4">
+        <li key={drop.id} className="rounded-lg bg-primary/75 p-4">
           <h2 className="text-lg font-bold text-white">{drop.title}</h2>
           {drop.content && <p className="mt-1 text-white font-thin">{drop.content}</p>}
           <p className="mt-2 text-sm text-white italic">

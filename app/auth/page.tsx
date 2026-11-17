@@ -10,7 +10,7 @@ export default function Auth() {
 
   return (
     <div className="flex items-center gap-6 h-screen w-full p-5">
-      <div className="bg-secondary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
+      <div className="bg-primary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
         <h2 className="text-white font-bold text-4xl">Connexion</h2>
         <form action={action} className="w-full flex flex-col items-center space-y-5 justify-center">
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="login" placeholder="Nom d'utilisateur" autoComplete="username" required />
@@ -21,7 +21,7 @@ export default function Auth() {
           </button>
         </form>
       </div>
-      <div className="bg-secondary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
+      <div className="bg-primary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
         <h2 className="text-white font-bold text-4xl">Inscription</h2>
         <form action="" className="w-full flex flex-col items-center space-y-5 justify-center">
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="username" placeholder="Nom d'utilisateur" id="" />

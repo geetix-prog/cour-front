@@ -18,7 +18,7 @@ export default function CategoryButtons({ items }: Props) {
     <ul className="flex flex-col justify-between w-full gap-4">
       <span>Catégorie :</span>
       {items.map((category) => (
-        <button onClick={() => handleSelect(category.id)} key={category.id} className="rounded-lg bg-secondary text-white font-semibold hover:-translate-y-0.5 cursor-pointer transition-duration duration-100 ease-in p-4">
+        <button onClick={() => handleSelect(category.id)} key={category.id} className="rounded-lg bg-primary text-white font-semibold hover:-translate-y-0.5 cursor-pointer transition-duration duration-100 ease-in p-4">
           <p>{category.label}</p>
         </button>
       ))}
