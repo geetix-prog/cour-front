@@ -15,7 +15,7 @@ export default function Auth() {
         <form action={action} className="w-full flex flex-col items-center space-y-5 justify-center">
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="login" placeholder="Nom d'utilisateur" autoComplete="username" required />
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="password" name="password" placeholder="Mot de passe" autoComplete="current-password" required />
-          {state.error && <p role="alert">{state.error}</p>}
+          {state?.error && <p role="alert">{state.error}</p>}
           <button type="submit" disabled={pending} className="bg-background rounded-full px-3 py-2 font-semibold text-sm cursor-pointer hover:-translate-y-0.5 transition-all duration-100 ease-in uppercase disabled:cursor-not-allowed disabled:opacity-50">
             {pending ? "Connexion..." : "Se connecter"}
           </button>
