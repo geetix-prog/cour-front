@@ -1,13 +1,25 @@
 import { Suspense } from "react";
 import DropList from "@/components/DropList";
+import DropCategorie from "@/components/DropCategorie";
 
-export default function Drops() {
+export default function Drops({ searchParams }: PageProps<"/drops">) {
+  const category = searchParams.then((params) => params.category);
+
   return (
-    <div className="m-10 flex flex-col items-center gap-6">
+    <div className="m-10 flex flex-col w-full items-center gap-6">
       <h1 className="text-4xl font-bold">Les drops</h1>
-      <Suspense fallback={<p>Chargement des drops...</p>}>
-        <DropList />
-      </Suspense>
+      <div className="flex w-full gap-5">
+        <div>
+          <Suspense fallback={<p>Chargement des catégories...</p>}>
+            <DropCategorie />
+          </Suspense>
+        </div>
+        <div className="w-full">
+          <Suspense fallback={<p>Chargement des drops...</p>}>
+            <DropList category={category} />
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 }
