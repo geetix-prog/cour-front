@@ -7,4 +7,5 @@ export async function apiGet<T>(path: string, token?: string) {
   })
   if (res.status === 404) notFound()
   if (!res.ok) throw new Error(`API ${res.status} sur ${path}`)
+  return res.json() as Promise<T>
 }
