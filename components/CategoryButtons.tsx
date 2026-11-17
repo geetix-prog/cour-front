@@ -1,14 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { Category } from "@/lib/api/types";
 
 type Props = { items: Category[] };
 
 export default function CategoryButtons({ items }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   function handleSelect(categoryId: string) {
-    router.push(`/drops?category=${categoryId}`);
+    const params = new URLSearchParams(searchParams);
+    params.set("category", categoryId);
+    router.push(`/drops?${params}`);
   }
 
   return (
