@@ -1,5 +1,6 @@
 import { apiGet } from "@/lib/api/client";
 import type { DropPage } from "@/lib/api/types";
+import Link from "next/link";
 
 type Props = {
   category: Promise<string | string[] | undefined>;
@@ -23,12 +24,14 @@ export default async function DropList(props: Props) {
   return (
     <ul className="flex w-full flex-col gap-4">
       {items.map((drop) => (
-        <li key={drop.id} className="rounded-lg bg-primary/75 p-4">
-          <h2 className="text-lg font-bold text-white">{drop.title}</h2>
-          {drop.content && <p className="mt-1 text-white font-thin">{drop.content}</p>}
-          <p className="mt-2 text-sm text-white italic">
-            par <span className="text-accent">{drop.author.displayName}</span>
-          </p>
+        <li key={drop.id} className="rounded-lg cursor-pointer hover:-translate-y-0.75 transition-all duration-100 ease-in bg-primary/75 p-4">
+          <Link href={`/drops/${drop.id}`}>
+            <h2 className="text-lg font-bold text-white">{drop.title}</h2>
+            {drop.content && <p className="mt-1 text-white font-thin">{drop.content}</p>}
+            <p className="mt-2 text-sm text-white italic">
+              par <span className="text-accent">{drop.author.displayName}</span>
+            </p>
+          </ Link>
         </li>
       ))}
     </ul>
