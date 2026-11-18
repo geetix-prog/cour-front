@@ -26,6 +26,7 @@ export async function apiPost<T>(path: string, body?: unknown, token?: string) {
     },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
+  console.log(res)
   if (res.status === 404) notFound();
   if (!res.ok) throw new Error(`API ${res.status} sur ${path}`);
   return res.json() as T;

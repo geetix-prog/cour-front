@@ -3,7 +3,7 @@ import { requireSession } from "../session";
 import { apiDelete, apiPost } from "../api/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { refresh } from "next/cache";
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
 
 export async function toggleLiked(dropId: number, liked: boolean) {
   await requireSession();
@@ -18,18 +18,20 @@ export async function toggleLiked(dropId: number, liked: boolean) {
   return {};
 }
 
-export type CreationState = { error?: string };
+export type createDropState = { error?: string };
 
-export async function createDrop(form: FormData) {
+export async function createDrop(_prev: createDropState, form: FormData): Promise<createDropState> {
+  await requireSession();
   try {
     const body = {
-      username: form.get("username"),
-      email: form.get("email"),
-      password: form.get("password"),
-      displayName: form.get("displayName"),
-      bio: form.get("bio"),
+      title: form.get('title'),
+      content: form.get('content'),
+      category: form.get('category'),
+      lat: Number(form.get('lat')),
+      lng: Number(form.get('lng'))
     };
-    const res = await apiPost('/drops', body)
+    console.log(body)
+    await apiPost("/drops", body);
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : "Une erreur est survenue",
