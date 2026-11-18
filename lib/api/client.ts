@@ -37,7 +37,10 @@ export async function apiDelete<T>(path: String, token?: string) {
 
   const res = await fetch(`${process.env.API_URL}${path}`, {
     method: "DELETE",
-    headers: session ? { Authorization: `Bearer${session}` } : {},
+    headers: {
+      "Content-Type": "application/json",
+      ...(session ? { Authorization: `Bearer ${session}` } : {}),
+    },
   });
   if (res.status === 404) notFound();
   if (!res.ok) throw new Error(`API ${res.status} sur ${path}`);
