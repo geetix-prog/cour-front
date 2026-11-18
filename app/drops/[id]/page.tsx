@@ -7,7 +7,6 @@ interface Props {
 
 export default function Drop({ params }: Props) {
   const id = params.then((p) => p.id);
-  console.log(id)
 
   return (
     <div className="flex w-full justify-center p-6">
