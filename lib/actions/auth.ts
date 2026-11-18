@@ -22,7 +22,7 @@ export async function login(_prev: LoginState, form: FormData): Promise<LoginSta
   redirect("/");
 }
 
-export async function Register(_prev: RegisterState, form: FormData): Promise<RegisterState> {
+export async function register(_prev: RegisterState, form: FormData): Promise<RegisterState> {
   let auth: AuthResponse;
   try {
     const body = {
@@ -33,13 +33,7 @@ export async function Register(_prev: RegisterState, form: FormData): Promise<Re
       bio: form.get("bio"),
     };
     console.log("Register body:", body);
-    auth = await apiPost<AuthResponse>("/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+    auth = await apiPost<AuthResponse>("/auth/register", body);
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : "Une erreur est survenue",

@@ -2,14 +2,14 @@
 
 import { useActionState } from "react";
 import { login, type LoginState } from "@/lib/actions/auth";
-import { Register, type RegisterState } from "@/lib/actions/auth";
+import { register, type RegisterState } from "@/lib/actions/auth";
 
 const initialState: LoginState = {};
 const registerInitialState: RegisterState = {};
 
 export default function Auth() {
   const [state, action, pending] = useActionState(login, initialState);
-  const [registerState, registerAction, registerPending] = useActionState(Register, registerInitialState);
+  const [registerState, registerAction, registerPending] = useActionState(register, registerInitialState);
   
   return (
     <div className="flex items-center gap-6 h-screen w-full p-5">
