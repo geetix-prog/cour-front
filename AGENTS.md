@@ -33,7 +33,7 @@ Lance `npm run lint` et `npm run build` avant de dire qu'un truc est fini.
 
 ## API
 
-- L'URL de base est dans une variable d'env (`NEXT_PUBLIC_API_URL`), jamais en dur dans le code.
+- L'URL de base est dans une variable d'env (`API_URL`), jamais en dur dans le code.
 - Tous les appels passent par un seul endroit (`lib/api/`), pas de `fetch` éparpillés dans les composants.
 - Les types des réponses sont dans `types/`.
 - Si tu ne connais pas la forme d'une route ou d'une réponse, demande. N'invente pas d'endpoint.
