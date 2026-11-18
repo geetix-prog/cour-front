@@ -1,0 +1,41 @@
+"use server";
+import { requireSession } from "../session";
+import { apiDelete, apiPost } from "../api/client";
+import { ApiError } from "next/dist/server/api-utils";
+import { refresh } from "next/cache";
+import { redirect } from "next/navigation";
+
+export async function toggleLiked(dropId: number, liked: boolean) {
+  await requireSession();
+  try {
+    if (liked) await apiDelete(`/drops/${dropId}/like`);
+    else await apiPost(`/drops/${dropId}/like`);
+  } catch (e) {
+    if (e instanceof ApiError) return { error: e.message };
+    throw e;
+  }
+  refresh();
+  return {};
+}
+
+export type createDropState = { error?: string };
+
+export async function createDrop(_prev: createDropState, form: FormData): Promise<createDropState> {
+  await requireSession();
+  try {
+    const body = {
+      title: form.get('title'),
+      content: form.get('content'),
+      category: form.get('category'),
+      lat: Number(form.get('lat')),
+      lng: Number(form.get('lng'))
+    };
+    console.log(body)
+    await apiPost("/drops", body);
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Une erreur est survenue",
+    };
+  }
+  redirect("/drops");
+}

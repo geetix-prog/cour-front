@@ -32,7 +32,6 @@ export async function register(_prev: RegisterState, form: FormData): Promise<Re
       displayName: form.get("displayName"),
       bio: form.get("bio"),
     };
-    console.log("Register body:", body);
     auth = await apiPost<AuthResponse>("/auth/register", body);
   } catch (error) {
     return {

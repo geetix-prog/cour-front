@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { apiGet } from "@/lib/api/client";
 import type { Category, Drop } from "@/lib/api/types";
+import LikeButton from "./LikeButton";
 
 type Props = {
   id: Promise<string>;
@@ -47,11 +48,14 @@ export default async function DropDetail(props: Props) {
         ) : (
           drop.content && <p className="text-lg font-thin text-white">{drop.content}</p>
         )}
-
-        <p className="text-sm text-white italic">
-          par <span className="text-accent">{drop.author.displayName}</span>
-          {drop.isMine && " (toi)"}
-        </p>
+        
+        <div>
+          <p className="text-sm text-white italic">
+            par <span className="text-accent">{drop.author.displayName}</span>
+            {drop.isMine && " (toi)"}
+          </p>
+          <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
+        </div>
 
         <div className="flex flex-wrap gap-3 border-t border-white/20 pt-4 text-sm font-semibold text-white">
           <span className={`rounded-lg px-3 py-1 ${drop.likedByMe ? "bg-accent" : "bg-background/40"}`}>

@@ -1,6 +1,7 @@
 import { apiGet } from "@/lib/api/client";
 import type { DropPage } from "@/lib/api/types";
 import Link from "next/link";
+import LikeButton from "./LikeButton";
 
 type Props = {
   category: Promise<string | string[] | undefined>;
@@ -31,6 +32,7 @@ export default async function DropList(props: Props) {
             <p className="mt-2 text-sm text-white italic">
               par <span className="text-accent">{drop.author.displayName}</span>
             </p>
+            <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
           </ Link>
         </li>
       ))}
