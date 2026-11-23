@@ -1,6 +1,6 @@
 "use server";
 import { requireSession } from "../session";
-import { apiDelete, apiPost } from "../api/client";
+import { apiDelete, apiPatch, apiPost } from "../api/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
@@ -72,4 +72,35 @@ export async function deleteDropComment(commentId: number): Promise<CommentState
   }
   refresh();
   return {};
+}
+
+export type UpdateDropState = { error?: string };
+
+export async function updateDrop(dropId: number, _prev: UpdateDropState, form: FormData): Promise<UpdateDropState> {
+  await requireSession();
+
+  const title = String(form.get("title") ?? "").trim();
+  const content = String(form.get("content") ?? "").trim();
+  const imageUrl = String(form.get("image") ?? "").trim();
+  const lat = Number(form.get("lat"));
+  const lng = Number(form.get("lng"));
+
+  if (!title) return { error: "Le titre est obligatoire." };
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return { error: "La latitude et la longitude doivent être des nombres." };
+
+  try {
+    await apiPatch(`/drops/${dropId}`, {
+      title,
+      content,
+      category: form.get("category"),
+      imageUrl: imageUrl || null,
+      lat,
+      lng,
+    });
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Une erreur est survenue",
+    };
+  }
+  redirect(`/drops/${dropId}`);
 }

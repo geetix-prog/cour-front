@@ -35,6 +35,26 @@ export async function apiPost<T>(path: string, body?: unknown, token?: string) {
   return res.json() as T;
 }
 
+export async function apiPatch<T>(path: string, body: unknown) {
+  const session = (await cookies()).get("session")?.value;
+
+  const res = await fetch(`${process.env.API_URL}${path}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(session ? { Authorization: `Bearer ${session}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 404) notFound();
+  if (!res.ok) {
+    const detail = await res.text();
+    console.error(`API ${res.status} sur ${path}`, detail);
+    throw new Error(`API ${res.status} sur ${path} : ${detail}`);
+  }
+  return res.json() as T;
+}
+
 export async function apiDelete<T>(path: string, token?: string) {
   const session = await requireSession();
 

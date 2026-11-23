@@ -5,6 +5,7 @@ import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import { getDrop } from "@/lib/api/drops";
 import { getCategories } from "@/lib/api/categories";
+import EditDropButton from "./EditDropButton";
 
 type Props = {
   id: Promise<string>;
@@ -58,6 +59,10 @@ export default async function DropDetail(props: Props) {
           </p>
           <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
         </div>
+
+        {drop.isMine && 
+          <EditDropButton dropId={drop.id} />
+        }
 
         <div className="flex flex-wrap gap-3 border-t border-white/20 pt-4 text-sm font-semibold text-white">
           <span className={`rounded-lg px-3 py-1 ${drop.likedByMe ? "bg-accent" : "bg-background/40"}`}>
