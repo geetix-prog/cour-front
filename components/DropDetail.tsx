@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { apiGet } from "@/lib/api/client";
 import type { Category, Drop } from "@/lib/api/types";
 import LikeButton from "./LikeButton";
+import CommentList from "./CommentList";
 
 type Props = {
   id: Promise<string>;
@@ -27,7 +29,6 @@ export default async function DropDetail(props: Props) {
   return (
     <article className="w-full max-w-2xl overflow-hidden rounded-lg bg-primary/75">
       {drop.imageUrl && (
-        // eslint-disable-next-line @next/next/no-img-element -- images externes, hôtes inconnus
         <img src={drop.imageUrl} alt={drop.title} className="aspect-4/3 w-full object-cover" />
       )}
 
@@ -73,6 +74,10 @@ export default async function DropDetail(props: Props) {
           </span>
         </div>
       </div>
+
+      <Suspense fallback={<p className="px-6 py-4 text-sm text-white italic">Chargement des commentaires...</p>}>
+        <CommentList dropId={drop.id} />
+      </Suspense>
 
       <div className="px-6 pb-6">
         <Link
