@@ -16,7 +16,7 @@ export async function apiGet<T>(path: string) {
 }
 
 export async function apiPost<T>(path: string, body?: unknown, token?: string) {
-  const session = await requireSession();
+  const session = (await cookies()).get("session")?.value;
 
   const res = await fetch(`${process.env.API_URL}${path}`, {
     method: "POST",
@@ -26,7 +26,6 @@ export async function apiPost<T>(path: string, body?: unknown, token?: string) {
     },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-  console.log(res);
   if (res.status === 404) notFound();
   if (!res.ok) throw new Error(`API ${res.status} sur ${path}`);
   return res.json() as T;
