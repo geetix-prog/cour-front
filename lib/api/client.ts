@@ -35,7 +35,7 @@ export async function apiPost<T>(path: string, body?: unknown, token?: string) {
   return res.json() as T;
 }
 
-export async function apiDelete<T>(path: String, token?: string) {
+export async function apiDelete<T>(path: string, token?: string) {
   const session = await requireSession();
 
   const res = await fetch(`${process.env.API_URL}${path}`, {
@@ -47,5 +47,6 @@ export async function apiDelete<T>(path: String, token?: string) {
   });
   if (res.status === 404) notFound();
   if (!res.ok) throw new Error(`API ${res.status} sur ${path}`);
+  if (res.status === 204) return undefined as T;
   return res.json() as T;
 }
