@@ -9,3 +9,4 @@ export type Health = S["Health"];
 export type AuthResponse = S["AuthResponse"];
 export type Comment = S["Comment"];
 export type CommentPage = S["CommentPage"];
+export type PublicUser = S["PublicUser"];

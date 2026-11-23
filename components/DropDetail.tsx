@@ -6,6 +6,7 @@ import CommentForm from "./CommentForm";
 import { getDrop } from "@/lib/api/drops";
 import { getCategories } from "@/lib/api/categories";
 import EditDropButton from "./EditDropButton";
+import PresenceWidget from "./PresenceWidget";
 
 type Props = {
   id: Promise<string>;
@@ -59,6 +60,8 @@ export default async function DropDetail(props: Props) {
           </p>
           <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
         </div>
+
+        <PresenceWidget dropId={drop.id} />
 
         {drop.isMine && 
           <EditDropButton dropId={drop.id} />
