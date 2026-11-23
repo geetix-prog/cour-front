@@ -1,12 +1,14 @@
-import { apiGet } from "@/lib/api/client";
+import { getDropComment } from "@/lib/actions/drops";
 import type { CommentPage } from "@/lib/api/types";
+import DeleteCommentButton from "./DeleteCommentButton";
 
 type Props = {
-  dropId: number;
+  dropId: string;
 };
 
 export default async function CommentList({ dropId }: Props) {
-  const { items, total } = await apiGet<CommentPage>(`/drops/${dropId}/comments`);
+  const { items, total } = await getDropComment(dropId);
+
 
   return (
     <section className="flex flex-col gap-3 border-t border-white/20 px-6 py-4">
@@ -25,13 +27,16 @@ export default async function CommentList({ dropId }: Props) {
                   {comment.author.displayName}
                   {comment.isMine && <span className="font-normal text-white"> (toi)</span>}
                 </span>
-                <time dateTime={comment.createdAt} className="text-white/70 italic">
-                  {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </time>
+                <div>
+                  <time dateTime={comment.createdAt} className="text-white/70 italic">
+                    {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </time>
+                  {comment.isMine && <DeleteCommentButton commentId={comment.id} />}
+                </div>
               </div>
               <p className="mt-1 text-white">{comment.content}</p>
             </li>
