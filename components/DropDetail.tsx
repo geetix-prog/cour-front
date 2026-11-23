@@ -4,6 +4,7 @@ import { apiGet } from "@/lib/api/client";
 import type { Category, Drop } from "@/lib/api/types";
 import LikeButton from "./LikeButton";
 import CommentList from "./CommentList";
+import CommentForm from "./CommentForm";
 
 type Props = {
   id: Promise<string>;
@@ -78,6 +79,8 @@ export default async function DropDetail(props: Props) {
       <Suspense fallback={<p className="px-6 py-4 text-sm text-white italic">Chargement des commentaires...</p>}>
         <CommentList dropId={drop.id} />
       </Suspense>
+
+      <CommentForm dropId={drop.id} />
 
       <div className="px-6 pb-6">
         <Link

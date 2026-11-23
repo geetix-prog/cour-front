@@ -43,3 +43,21 @@ export async function createDrop(_prev: createDropState, form: FormData): Promis
   }
   redirect("/drops");
 }
+
+export type CommentState = { error?: string };
+
+export async function createDropComment(dropId: string, _prev: CommentState, form: FormData): Promise<CommentState> {
+  await requireSession();
+  const content = String(form.get("content") ?? "").trim();
+  if (!content) return { error: "Le commentaire ne peut pas être vide." };
+
+  try {
+    await apiPost(`/drops/${dropId}/comments`, { content });
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Une erreur est survenue",
+    };
+  }
+  refresh();
+  return {};
+}
