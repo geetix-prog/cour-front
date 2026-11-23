@@ -22,6 +22,9 @@ export default function CategoryButtons({ items }: Props) {
           <p>{category.label}</p>
         </button>
       ))}
+      <a href="/drops/create" className="text-center rounded-lg border-2 border-primary text-white font-semibold hover:-translate-y-0.5 cursor-pointer transition-duration duration-100 ease-in p-4">
+          + Créer un drop
+        </a>
     </ul>
   );
 }

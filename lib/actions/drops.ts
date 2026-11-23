@@ -23,12 +23,16 @@ export type createDropState = { error?: string };
 export async function createDrop(_prev: createDropState, form: FormData): Promise<createDropState> {
   await requireSession();
   try {
+    const rawLat = form.get('lat');
+    const rawLng = form.get('lng');
+
     const body = {
       title: form.get('title'),
       content: form.get('content'),
       category: form.get('category'),
-      lat: Number(form.get('lat')),
-      lng: Number(form.get('lng'))
+      lat: rawLat ? Number(rawLat) : 47.49561,
+      lng: rawLng ? Number(rawLng) : 6.80544,
+      imageUrl: form.get('image'),
     };
     console.log(body)
     await apiPost("/drops", body);
