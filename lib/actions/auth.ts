@@ -11,10 +11,12 @@ export type RegisterState = { error?: string };
 export async function login(_prev: LoginState, form: FormData): Promise<LoginState> {
   let auth: AuthResponse;
   try {
-    auth = await apiPost<AuthResponse>("/auth/login", {
+    const body = {
       login: form.get("login"),
-      password: form.get("password"),
-    });
+      password: form.get("password")
+    };
+
+    auth = await apiPost<AuthResponse>("/auth/login", body);
   } catch {
     return { error: "Identifiants incorrects" };
   }
@@ -28,7 +30,7 @@ export async function register(_prev: RegisterState, form: FormData): Promise<Re
     const body = {
       username: form.get("username"),
       email: form.get("email"),
-      password: form.get("password"),
+      password: form.get("registerPassword"),
       displayName: form.get("displayName"),
       bio: form.get("bio"),
     };
