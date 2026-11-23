@@ -1,6 +1,6 @@
 "use server";
 import { requireSession } from "../session";
-import { apiGet, apiDelete, apiPost } from "../api/client";
+import { apiDelete, apiPost } from "../api/client";
 import { ApiError } from "next/dist/server/api-utils";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
@@ -42,19 +42,6 @@ export async function createDrop(_prev: createDropState, form: FormData): Promis
   }
   redirect("/drops");
 }
-
-export async function getDropComment(dropId: string){
-  await requireSession();
-  try {
-    const { items, total } = await apiGet(`/drops/${dropId}/comments`)
-    return { items, total }
-  } catch(error) {
-    return {
-      error: error instanceof Error ? error.message : "Une erreur est survenue",
-    };
-  }
-}
-
 
 export type CommentState = { error?: string };
 

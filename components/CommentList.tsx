@@ -1,13 +1,12 @@
-import { getDropComment } from "@/lib/actions/drops";
-import type { CommentPage } from "@/lib/api/types";
+import { getDropComments } from "@/lib/api/drops";
 import DeleteCommentButton from "./DeleteCommentButton";
 
 type Props = {
-  dropId: string;
+  dropId: number;
 };
 
 export default async function CommentList({ dropId }: Props) {
-  const { items, total } = await getDropComment(dropId);
+  const { items, total } = await getDropComments(dropId);
 
 
   return (

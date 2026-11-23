@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { apiGet } from "@/lib/api/client";
-import type { Category, Drop } from "@/lib/api/types";
 import LikeButton from "./LikeButton";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
+import { getDrop } from "@/lib/api/drops";
+import { getCategories } from "@/lib/api/categories";
 
 type Props = {
   id: Promise<string>;
@@ -14,8 +14,8 @@ export default async function DropDetail(props: Props) {
   const id = await props.id;
 
   const [drop, categories] = await Promise.all([
-    apiGet<Drop>(`/drops/${id}`),
-    apiGet<Category[]>("/categories"),
+    getDrop(id),
+    getCategories()
   ]);
 
   const categoryLabel =
