@@ -10,3 +10,5 @@ export type AuthResponse = S["AuthResponse"];
 export type Comment = S["Comment"];
 export type CommentPage = S["CommentPage"];
 export type PublicUser = S["PublicUser"];
+export type Profile = S["Profile"];
+export type PrivateUser = S["PrivateUser"];
