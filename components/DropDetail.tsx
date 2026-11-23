@@ -7,6 +7,7 @@ import { getDrop } from "@/lib/api/drops";
 import { getCategories } from "@/lib/api/categories";
 import EditDropButton from "./EditDropButton";
 import PresenceWidget from "./PresenceWidget";
+import DropMap from "./DropMap";
 
 type Props = {
   id: Promise<string>;
@@ -82,6 +83,12 @@ export default async function DropDetail(props: Props) {
             {drop.location.precision === "approx" && " (approx.)"}
           </span>
         </div>
+        <DropMap
+          lat={drop.location.lat}
+          lng={drop.location.lng}
+          title={drop.title}
+          approx={drop.location.precision === "approx"}
+        />
       </div>
 
       <Suspense fallback={<p className="px-6 py-4 text-sm text-white italic">Chargement des commentaires...</p>}>
