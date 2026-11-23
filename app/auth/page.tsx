@@ -31,7 +31,7 @@ export default function Auth() {
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="email" name="email" placeholder="Email" id="" required/>
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="displayName" placeholder="Nom affiché" id="" required/>
           <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="bio" placeholder="Bio" id="" />
-          <input className="bg-accent rounded-full w-1/2 text-background p-3" type="password" name="password" placeholder="Mot de passe" id="" required />
+          <input className="bg-accent rounded-full w-1/2 text-background p-3" type="password" name="registerPassword" placeholder="Mot de passe" id="" required />
           {registerState?.error && <p role="alert" className="text-accent">{registerState.error}</p>}
           <button type="submit" disabled={registerPending} className="bg-background rounded-full px-3 py-2 font-semibold text-sm cursor-pointer hover:-translate-y-0.5 transition-all duration-100 ease-in uppercase">
             {registerPending ? "Inscription..." : "S'inscrire"}
