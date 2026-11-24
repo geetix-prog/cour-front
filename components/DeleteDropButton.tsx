@@ -1,6 +1,7 @@
 "use client";
 import { useActionState } from "react";
-import { deleteDrop, type DropState } from "@/lib/actions/drops";
+import { deleteDrop } from "@/lib/actions/drops";
+import type { ActionState } from "@/lib/api/errors";
 import { buttonVariants } from "@/components/ui/button";
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 export default function DeleteDropButton({ dropId }: Props) {
   const [state, action, pending] = useActionState(
     () => deleteDrop(String(dropId)),
-    {} as DropState,
+    {} as ActionState,
   );
 
   return (

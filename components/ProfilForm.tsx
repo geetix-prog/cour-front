@@ -1,6 +1,7 @@
 "use client";
 import { useActionState } from "react";
-import { updateProfile, type UpdateProfileState } from "@/lib/actions/user";
+import { updateProfile } from "@/lib/actions/user";
+import type { ActionState } from "@/lib/api/errors";
 import type { PrivateUser } from "@/lib/api/types";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -12,13 +13,13 @@ type Props = {
 };
 
 export default function ProfilForm({ user }: Props) {
-  const [state, action, pending] = useActionState(updateProfile, {} as UpdateProfileState);
+  const [state, action, pending] = useActionState(updateProfile, {} as ActionState);
 
   return (
     <form action={action} className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 sm:p-8">
       <div className="flex items-center gap-4">
         {user.avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- avatars externes, hôtes inconnus
+          // eslint-disable-next-line @next/next/no-img-element
           <img className="size-16 rounded-full object-cover ring-2 ring-accent" src={user.avatarUrl} alt="Photo de profil" />
         ) : (
           <div className="size-16 rounded-full bg-accent" aria-hidden="true" />
@@ -32,11 +33,23 @@ export default function ProfilForm({ user }: Props) {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="displayName">Nom affiché</FieldLabel>
-          <Input id="displayName" name="displayName" type="text" required defaultValue={user.displayName} />
+          <Input
+            id="displayName"
+            name="displayName"
+            type="text"
+            required
+            defaultValue={user.displayName}
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="avatarUrl">Photo de profil (URL)</FieldLabel>
-          <Input id="avatarUrl" name="avatarUrl" type="url" placeholder="https://..." defaultValue={user.avatarUrl ?? ""} />
+          <Input
+            id="avatarUrl"
+            name="avatarUrl"
+            type="url"
+            placeholder="https://..."
+            defaultValue={user.avatarUrl ?? ""}
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="bio">Bio</FieldLabel>

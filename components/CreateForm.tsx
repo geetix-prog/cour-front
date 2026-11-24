@@ -1,6 +1,7 @@
 "use client";
 import { use, useActionState, useState } from "react";
-import { createDrop, type createDropState } from "@/lib/actions/drops";
+import { createDrop } from "@/lib/actions/drops";
+import type { ActionState } from "@/lib/api/errors";
 import type { Category } from "@/lib/api/types";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -14,14 +15,12 @@ type Props = {
 };
 
 export default function CreateForm(props: Props) {
-  const [state, action, pending] = useActionState(createDrop, {} as createDropState);
+  const [state, action, pending] = useActionState(createDrop, {} as ActionState);
   const categories = use(props.categories);
   const items = categories.map((category) => ({ value: category.id, label: category.label }));
 
-  // Texte des deux champs : on garde des chaînes pour permettre une saisie en cours (« 47. »).
   const [coords, setCoords] = useState({ lat: "", lng: "" });
 
-  // Position du marqueur : seulement quand les deux champs contiennent des nombres valides.
   const lat = Number.parseFloat(coords.lat);
   const lng = Number.parseFloat(coords.lng);
   const position: LatLng | null = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
@@ -30,31 +29,32 @@ export default function CreateForm(props: Props) {
     setCoords({ lat: String(next.lat), lng: String(next.lng) });
   }
 
+
   return (
     <form action={action} className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 sm:p-8">
       <FieldGroup>
         <div className="grid gap-5 sm:grid-cols-2">
-        <Field>
-          <FieldLabel htmlFor="title">Titre</FieldLabel>
-          <Input id="title" name="title" type="text" required />
-        </Field>
-        <Field>
-          <FieldLabel>Catégorie</FieldLabel>
-          <Select items={items} name="category" defaultValue={categories[0]?.id}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </Field>
+          <Field>
+            <FieldLabel htmlFor="title">Titre</FieldLabel>
+            <Input id="title" name="title" type="text" required />
+          </Field>
+          <Field>
+            <FieldLabel>Catégorie</FieldLabel>
+            <Select items={items} name="category" defaultValue={categories[0]?.id}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
         </div>
         <Field>
           <FieldLabel htmlFor="content">Contenu</FieldLabel>
@@ -95,7 +95,12 @@ export default function CreateForm(props: Props) {
         </div>
         <Field>
           <FieldLabel htmlFor="image">Image (URL)</FieldLabel>
-          <Input id="image" name="image" type="url" placeholder="https://..." />
+          <Input
+            id="image"
+            name="image"
+            type="url"
+            placeholder="https://..."
+          />
         </Field>
       </FieldGroup>
 
