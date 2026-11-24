@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import DropList from "@/components/DropList";
 import CategorySearch from "@/components/CategorySearch";
 import DropCategorie from "@/components/DropCategorie";
+import OnlineWidget from "@/components/OnlineWidget"
 
 export default function Drops({ searchParams }: PageProps<"/drops">) {
   const category = searchParams.then((params) => params.category);
@@ -9,7 +10,10 @@ export default function Drops({ searchParams }: PageProps<"/drops">) {
 
   return (
     <div className="flex flex-col w-full items-center justify-center gap-6">
-      <h1 className="text-4xl font-bold">Les drops</h1>
+      <div className="flex items-center gap-2">
+        <h1 className="text-4xl font-bold">Les drops</h1>
+        <OnlineWidget />
+      </div>
       <div className="flex w-full gap-5 justify-center">
         <div className="1/3">
           <Suspense fallback={<p>Chargement des catégories...</p>}>

@@ -1,3 +1,6 @@
+import type { PublicUser } from "@/lib/api/types";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- chaque type de message a sa propre forme
 type Listener = (data: any) => void;
 
 const NO_RECONNECT = [4001, 4008, 4009];
@@ -12,6 +15,7 @@ let consumers = 0;
 let attempt = 0;
 let reconnectTimer: ReturnType<typeof setTimeout> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
+let online: PublicUser[] = [];
 
 function scheduleReconnect() {
     attempt += 1;
@@ -21,14 +25,13 @@ function scheduleReconnect() {
 async function connect() {
     reconnectTimer = undefined;
     if (socket || connecting || consumers === 0) return;
-        connecting = true;
+    connecting = true;
     try {
-        const res = await fetch('/api/realtime/ticket',
-        { method: 'POST' });
+        const res = await fetch('/api/realtime/ticket', { method: 'POST' });
         if (!res.ok) return;
-            const { url } = await res.json();
+        const { url } = await res.json();
         if (consumers === 0 || socket) return;
-            open(url);
+        open(url);
     } catch {
         if (consumers > 0) scheduleReconnect();
     } finally {
@@ -40,17 +43,19 @@ function open(url: string) {
     const ws = new WebSocket(url);
     socket = ws;
     ws.onopen = () => {
-    attempt = 0;
-    openListeners.forEach((listener) => listener());
+        attempt = 0;
+        openListeners.forEach((listener) => listener());
     };
     ws.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-    listeners.get(message.type)?.forEach((listener) => listener(message.data));
+        const message = JSON.parse(event.data);
+        if (message.type === "hello") online = message.data.online;
+        if (message.type === "presence:online") online = message.data.users;
+        listeners.get(message.type)?.forEach((listener) => listener(message.data));
     };
     ws.onclose = (event) => {
-    if (socket === ws) socket = null;
-    if (consumers === 0 || NO_RECONNECT.includes(event.code)) return;
-    scheduleReconnect();
+        if (socket === ws) socket = null;
+        if (consumers === 0 || NO_RECONNECT.includes(event.code)) return;
+        scheduleReconnect();
     };
 }
 
@@ -59,6 +64,7 @@ function disconnect() {
     reconnectTimer = undefined;
     socket?.close(1000);
     socket = null;
+    online = [];
 }
 
 export function retain() {
@@ -89,4 +95,9 @@ export function onOpen(listener: () => void) {
 
 export function send(type: string, data: object = {}) {
     if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type, data }));
+}
+
+/** Dernière liste connue des utilisateurs en ligne (reçue via `hello` ou `presence:online`). */
+export function getOnline() {
+    return online;
 }
