@@ -47,7 +47,7 @@ export default function ViewerStack({ users, max = 4 }: Props) {
           </li>
         )}
       </ul>
-      <span className="text-sm text-white/70 italic">
+      <span className="text-sm text-muted-foreground">
         {users.length > 1 ? `${users.length} en train de regarder` : "1 en train de regarder"}
       </span>
     </div>

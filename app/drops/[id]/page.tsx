@@ -1,16 +1,12 @@
 import { Suspense } from "react";
 import DropDetail from "@/components/DropDetail";
 
-interface Props {
-  params: Promise<{ id: string }>;
-}
-
-export default function Drop({ params }: Props) {
+export default function Drop({ params }: PageProps<"/drops/[id]">) {
   const id = params.then((p) => p.id);
 
   return (
-    <div className="flex w-full justify-center p-6">
-      <Suspense fallback={<p>Chargement du drop...</p>}>
+    <div className="mx-auto w-full max-w-screen-xl px-4 py-6 sm:px-6 lg:px-8">
+      <Suspense fallback={<p className="text-sm text-muted-foreground">Chargement du drop...</p>}>
         <DropDetail id={id} />
       </Suspense>
     </div>

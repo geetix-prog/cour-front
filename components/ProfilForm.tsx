@@ -2,6 +2,10 @@
 import { useActionState } from "react";
 import { updateProfile, type UpdateProfileState } from "@/lib/actions/user";
 import type { PrivateUser } from "@/lib/api/types";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   user: PrivateUser;
@@ -11,60 +15,34 @@ export default function ProfilForm({ user }: Props) {
   const [state, action, pending] = useActionState(updateProfile, {} as UpdateProfileState);
 
   return (
-    <form action={action} className="w-1/3 bg-primary space-y-5 p-5 rounded-lg">
+    <form action={action} className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 sm:p-8">
       <div className="flex items-center gap-4">
         {user.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- avatars externes, hôtes inconnus
-          <img className="size-15 rounded-full border-2 border-black object-cover" src={user.avatarUrl} alt="Photo de profil" />
+          <img className="size-16 rounded-full object-cover ring-2 ring-accent" src={user.avatarUrl} alt="Photo de profil" />
         ) : (
-          <div className="size-15 rounded-full border-2 border-black bg-accent" aria-hidden="true" />
+          <div className="size-16 rounded-full bg-accent" aria-hidden="true" />
         )}
         <div>
-          <p className="font-bold text-accent">{user.displayName}</p>
-          <p className="text-sm text-background">@{user.username}</p>
+          <p className="text-xl font-bold text-primary">{user.displayName}</p>
+          <p className="text-sm text-muted-foreground">@{user.username}</p>
         </div>
       </div>
 
-      <div className="flex flex-col -space-y-3">
-        <label htmlFor="displayName" className="self-start text-accent ml-3 px-1 bg-primary z-10">Nom affiché</label>
-        <div className="w-full border border-accent rounded-lg p-3">
-          <input
-            id="displayName"
-            name="displayName"
-            type="text"
-            required
-            defaultValue={user.displayName}
-            className="text-background w-full outline-none border-none bg-transparent"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col -space-y-3">
-        <label htmlFor="avatarUrl" className="self-start text-accent ml-3 px-1 bg-primary z-10">Photo de profil (URL)</label>
-        <div className="w-full border border-accent rounded-lg p-3">
-          <input
-            id="avatarUrl"
-            name="avatarUrl"
-            type="url"
-            placeholder="https://..."
-            defaultValue={user.avatarUrl ?? ""}
-            className="text-background w-full outline-none border-none bg-transparent placeholder:text-background/50"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col -space-y-3">
-        <label htmlFor="bio" className="self-start text-accent ml-3 px-1 bg-primary z-10">Bio</label>
-        <div className="w-full border border-accent rounded-lg p-3">
-          <textarea
-            id="bio"
-            name="bio"
-            rows={4}
-            defaultValue={user.bio ?? ""}
-            className="text-background w-full outline-none border-none bg-transparent resize-none"
-          />
-        </div>
-      </div>
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="displayName">Nom affiché</FieldLabel>
+          <Input id="displayName" name="displayName" type="text" required defaultValue={user.displayName} />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="avatarUrl">Photo de profil (URL)</FieldLabel>
+          <Input id="avatarUrl" name="avatarUrl" type="url" placeholder="https://..." defaultValue={user.avatarUrl ?? ""} />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="bio">Bio</FieldLabel>
+          <Textarea id="bio" name="bio" rows={4} defaultValue={user.bio ?? ""} />
+        </Field>
+      </FieldGroup>
 
       {state.error && (
         <p role="alert" className="text-sm text-destructive">
@@ -72,18 +50,14 @@ export default function ProfilForm({ user }: Props) {
         </p>
       )}
       {state.success && !pending && (
-        <p role="status" className="text-sm text-background">
+        <p role="status" className="text-sm text-accent">
           Profil mis à jour.
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="text-primary bg-background px-3 py-2 rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {pending ? "Enregistrement..." : "Modifier"}
-      </button>
+      <Button type="submit" disabled={pending} className="self-end">
+        {pending ? "Enregistrement..." : "Enregistrer"}
+      </Button>
     </form>
   );
 }

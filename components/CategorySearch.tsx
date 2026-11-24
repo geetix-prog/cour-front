@@ -1,14 +1,30 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-export default function SearchBar() {
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export default function CategorySearch() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  function handleSelect(drop: string) {
+  function handleSearch(value: string) {
     const params = new URLSearchParams(searchParams);
-    params.set("q", drop);
-    router.push(`/drops?${params}`);
+    if (value) params.set("q", value);
+    else params.delete("q");
+    router.replace(`/drops?${params}`);
   }
 
-  return <input type="text" name="search" onChange={(e) => handleSelect(e.target.value)} placeholder="Rechercher un drop" />;
+  return (
+    <div className="flex flex-col gap-2">
+      <Label htmlFor="search">Rechercher</Label>
+      <Input
+        id="search"
+        type="search"
+        name="search"
+        defaultValue={searchParams.get("q") ?? ""}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Titre, contenu..."
+      />
+    </div>
+  );
 }

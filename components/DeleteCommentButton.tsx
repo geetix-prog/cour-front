@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useOptimistic } from "react";
+import { useActionState } from "react";
 import { deleteDropComment, type CommentState } from "@/lib/actions/drops";
 
 type Props = {
@@ -13,9 +13,9 @@ export default function DeleteCommentButton({ commentId }: Props) {
   );
 
   return (
-    <form action={action} className="ml-3 inline-flex items-center gap-2">
+    <form action={action} className="inline-flex items-center gap-2">
       {state.error && (
-        <span role="alert" className="text-xs text-accent">
+        <span role="alert" className="text-xs text-destructive">
           {state.error}
         </span>
       )}
@@ -24,11 +24,11 @@ export default function DeleteCommentButton({ commentId }: Props) {
         disabled={pending}
         aria-label="Supprimer le commentaire"
         title="Supprimer le commentaire"
-        className="h-8 w-8 cursor-pointer rounded-full bg-primary/25 transition duration-75 hover:bg-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex size-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition duration-75 hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
       >
         <svg
           aria-hidden="true"
-          className="inline-block h-5 w-5 text-white/70"
+          className="size-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

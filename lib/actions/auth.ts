@@ -45,4 +45,5 @@ export async function register(_prev: RegisterState, form: FormData): Promise<Re
 
 export async function logout() {
   (await cookies()).delete("session");
+  redirect("/auth");
 }

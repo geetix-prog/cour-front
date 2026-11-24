@@ -5,24 +5,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Contrôles natifs (spinners, croix de recherche, barres de défilement, autocomplétion) en version sombre. */
+  color-scheme: dark;
   --primary: #C9B8F5;
   --accent: #FF7A2F;
   --background: #141B3C;
   --foreground: #C9B8F5;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --card: #1B2350;
+  --card-foreground: #C9B8F5;
+  --popover: #1B2350;
+  --popover-foreground: #C9B8F5;
   --primary-foreground: #141B3C;
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --secondary: #232C5C;
+  --secondary-foreground: #C9B8F5;
+  --muted: #1B2350;
+  --muted-foreground: rgb(201 184 245 / 0.65);
   --accent-foreground: #141B3C;
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --destructive: #F87171;
+  --border: rgb(201 184 245 / 0.18);
+  --input: rgb(201 184 245 / 0.25);
+  --ring: #FF7A2F;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

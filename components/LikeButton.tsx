@@ -24,17 +24,24 @@ export default function LikeButton({ dropId, liked, likeCount }: Props) {
   }, {});
 
   return (
-    <form action={action}>
+    <form action={action} className="inline-flex flex-col items-end gap-1">
       <button
         type="submit"
         disabled={pending}
         aria-pressed={optimistic.liked}
         aria-label={optimistic.liked ? "Retirer le j'aime" : "J'aime"}
-        className="cursor-pointer disabled:cursor-not-allowed"
+        className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold transition-all duration-100 ease-in hover:-translate-y-0.5 disabled:cursor-not-allowed ${
+          optimistic.liked ? "border-accent bg-accent/15 text-accent" : "border-border text-primary hover:border-primary/40"
+        }`}
       >
-        {optimistic.liked ? "❤️" : "🖤"} {optimistic.likeCount}
+        <span aria-hidden="true">{optimistic.liked ? "❤️" : "🤍"}</span>
+        {optimistic.likeCount}
       </button>
-      {state.error && <p role="alert">{state.error}</p>}
+      {state.error && (
+        <p role="alert" className="text-xs text-destructive">
+          {state.error}
+        </p>
+      )}
     </form>
   );
 }

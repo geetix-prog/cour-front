@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { logout } from "@/lib/actions/auth";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import NotificationArea from "@/components/NotificationArea";
+import SiteHeader from "@/components/SiteHeader";
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
@@ -27,15 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans">
-        <header className="flex items-center justify-end gap-4 p-4">
-          <Suspense>
-            <NotificationArea />
-          </Suspense>
-          <form action={logout}>
-            <button type="submit">Logout</button>
-          </form>
-        </header>
-        {children}
+        <Suspense fallback={<div className="h-16 border-b border-border" />}>
+          <SiteHeader />
+        </Suspense>
+        <main className="flex flex-1 flex-col">{children}</main>
       </body>
     </html>
   );

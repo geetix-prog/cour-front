@@ -1,114 +1,86 @@
 "use client";
 
 import { useActionState } from "react";
-import { login, type LoginState } from "@/lib/actions/auth";
-import { register, type RegisterState } from "@/lib/actions/auth";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-  FieldTitle,
-} from "@/components/ui/field"
+import { login, register, type LoginState, type RegisterState } from "@/lib/actions/auth";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
-const initialState: LoginState = {};
-const registerInitialState: RegisterState = {};
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 export default function Auth() {
-  const [state, action, pending] = useActionState(login, initialState);
-  const [registerState, registerAction, registerPending] = useActionState(register, registerInitialState);
-  
+  const [loginState, loginAction, loginPending] = useActionState(login, {} as LoginState);
+  const [registerState, registerAction, registerPending] = useActionState(register, {} as RegisterState);
+
   return (
-    <div className="flex items-center gap-6 h-screen w-full p-5">
-      <div className="bg-primary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
-        <h2 className="text-white font-bold text-4xl">Connexion</h2>
-        <form action={action} className="w-full flex flex-col items-center space-y-5 justify-center">
-          {/* <input className="bg-accent rounded-full w-1/2 text-background p-3" type="text" name="login" placeholder="Nom d'utilisateur" autoComplete="username" required />
-          <input className="bg-accent rounded-full w-1/2 text-background p-3" type="password" name="password" placeholder="Mot de passe" autoComplete="current-password" required />
-          {state?.error && <p role="alert" className="text-accent">{state.error}</p>} */}
-          <FieldSet className="w-full max-w-xs">
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="username">Username</FieldLabel>
-                <Input name="login" type="text" placeholder="username" required />
-                <FieldDescription>
-                  Entrez votre nom d'utilisateur.
-                </FieldDescription>
-                {state.error && <FieldError>Nom incorrect</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input name="password" type="password" placeholder="••••••••" required />
-                <FieldDescription>
-                  Doit être suppérieur à 4 caractères
-                </FieldDescription>
-                {state.error && <FieldError>Mot de passe incorrect</FieldError>}
-              </Field>
-            </FieldGroup>
-          </FieldSet>
-          <button type="submit" disabled={pending} className="bg-background rounded-full px-3 py-2 font-semibold text-sm cursor-pointer hover:-translate-y-0.5 transition-all duration-100 ease-in uppercase disabled:cursor-not-allowed disabled:opacity-50">
-            {pending ? "Connexion..." : "Se connecter"}
-          </button>
+    <div className="mx-auto grid w-full max-w-5xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2">
+      <section className="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <h1 className="text-2xl font-bold text-primary">Connexion</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Content de te revoir.</p>
+
+        <form action={loginAction} className="mt-6 flex flex-col gap-5">
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="login">Nom d&apos;utilisateur ou email</FieldLabel>
+              <Input id="login" name="login" type="text" autoComplete="username" required />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
+              <Input id="password" name="password" type="password" autoComplete="current-password" required />
+            </Field>
+          </FieldGroup>
+
+          {loginState.error && (
+            <p role="alert" className="text-sm text-destructive">
+              {loginState.error}
+            </p>
+          )}
+
+          <Button type="submit" disabled={loginPending} className="self-start">
+            {loginPending ? "Connexion..." : "Se connecter"}
+          </Button>
         </form>
-      </div>
-      <div className="bg-primary rounded-lg space-y-5 w-full h-full flex flex-col items-center pt-5">
-        <h2 className="text-white font-bold text-4xl">Inscription</h2>
-        <form action={ registerAction } className="w-full flex flex-col items-center space-y-5 justify-center">
-          <FieldSet className="w-full max-w-xs">
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="username">Username</FieldLabel>
-                <Input name="username" type="text" placeholder="Nom d'utilisateur" required />
-                <FieldDescription>
-                  Entrez votre nom d'utilisateur.
-                </FieldDescription>
-                {registerState.error && <FieldError>Nom incorrect</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input name="email" type="email" placeholder="Email" required />
-                <FieldDescription>
-                  Entrez votre adresse email.
-                </FieldDescription>
-                {registerState.error && <FieldError>Email incorrect</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="displayName">Nom affiché</FieldLabel>
-                <Input name="displayName" type="text" placeholder="Nom affiché" required />
-                <FieldDescription>
-                  Entrez le nom affiché.
-                </FieldDescription>
-                {registerState.error && <FieldError>Nom incorrect</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="bio">Bio</FieldLabel>
-                <Input name="bio" type="text" placeholder="Bio" required />
-                <FieldDescription>
-                  Entrez votre bio.
-                </FieldDescription>
-                {registerState.error && <FieldError>Bio incorrect</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input name="registerPassword" type="password" placeholder="••••••••" />
-                <FieldDescription>
-                  Doit être suppérieur à 4 caractères
-                </FieldDescription>
-                {registerState.error && <FieldError>Mot de passe incorrect</FieldError>}
-              </Field>
-            </FieldGroup>
-          </FieldSet>
-          <button type="submit" disabled={registerPending} className="bg-background rounded-full px-3 py-2 font-semibold text-sm cursor-pointer hover:-translate-y-0.5 transition-all duration-100 ease-in uppercase">
+      </section>
+
+      <section className="rounded-xl border border-border bg-card p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-primary">Inscription</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Crée ton compte pour poser tes premiers drops.</p>
+
+        <form action={registerAction} className="mt-6 flex flex-col gap-5">
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="username">Nom d&apos;utilisateur</FieldLabel>
+              <Input id="username" name="username" type="text" autoComplete="username" required />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <Input id="email" name="email" type="email" autoComplete="email" required />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="displayName">Nom affiché</FieldLabel>
+              <Input id="displayName" name="displayName" type="text" required />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="bio">Bio</FieldLabel>
+              <Textarea id="bio" name="bio" rows={3} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="registerPassword">Mot de passe</FieldLabel>
+              <Input id="registerPassword" name="registerPassword" type="password" autoComplete="new-password" required />
+              <FieldDescription>Au moins 4 caractères.</FieldDescription>
+            </Field>
+          </FieldGroup>
+
+          {registerState.error && (
+            <p role="alert" className="text-sm text-destructive">
+              {registerState.error}
+            </p>
+          )}
+
+          <Button type="submit" variant="secondary" disabled={registerPending} className="self-start">
             {registerPending ? "Inscription..." : "S'inscrire"}
-          </button>
+          </Button>
         </form>
-      </div>
+      </section>
     </div>
   );
 }

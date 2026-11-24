@@ -1,15 +1,14 @@
 import { Suspense } from "react";
 import CreateForm from "@/components/CreateForm";
-import { apiGet } from "@/lib/api/client";
-import type { Category } from "@/lib/api/types";
+import { getCategories } from "@/lib/api/categories";
 
-export default function CrateDrop() {
-  const categories = apiGet<Category[]>("/categories");
+export default function CreateDrop() {
+  const categories = getCategories();
 
   return (
-    <div className="flex justify-center gap-6 h-screen w-full p-5">
-      <h1 className="text-white font-bold text-4xl">Créer un drop</h1>
-      <Suspense>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-bold text-primary">Créer un drop</h1>
+      <Suspense fallback={<p className="text-sm text-muted-foreground">Chargement du formulaire...</p>}>
         <CreateForm categories={categories} />
       </Suspense>
     </div>

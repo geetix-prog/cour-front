@@ -4,12 +4,12 @@ import LikeButton from "./LikeButton";
 import LikesCount from "./LikesCount";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
-import { getDrop } from "@/lib/api/drops";
-import { getCategories } from "@/lib/api/categories";
 import EditDropButton from "./EditDropButton";
+import DeleteDropButton from "./DeleteDropButton";
 import PresenceWidget from "./PresenceWidget";
 import DropMap from "./DropMap";
-import DeleteDropButton from "./DeleteDropButton";
+import { getDrop } from "@/lib/api/drops";
+import { getCategories } from "@/lib/api/categories";
 
 type Props = {
   id: Promise<string>;
@@ -18,13 +18,9 @@ type Props = {
 export default async function DropDetail(props: Props) {
   const id = await props.id;
 
-  const [drop, categories] = await Promise.all([
-    getDrop(id),
-    getCategories()
-  ]);
+  const [drop, categories] = await Promise.all([getDrop(id), getCategories()]);
 
-  const categoryLabel =
-    categories.find((category) => category.id === drop.category)?.label ?? drop.category;
+  const categoryLabel = categories.find((category) => category.id === drop.category)?.label ?? drop.category;
 
   const date = new Date(drop.createdAt).toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -33,61 +29,75 @@ export default async function DropDetail(props: Props) {
   });
 
   return (
-    <article className="w-full max-w-2xl overflow-hidden rounded-lg bg-primary/75">
-      {drop.imageUrl && (
-        <img src={drop.imageUrl} alt={drop.title} className="aspect-4/3 w-full object-cover" />
-      )}
+    <div className="flex w-full flex-col gap-6">
+      <Link href="/drops" className="self-start text-sm font-semibold text-muted-foreground hover:text-primary">
+        ← Retour aux drops
+      </Link>
 
-      <div className="flex flex-col gap-4 p-6">
-        <div className="flex items-center justify-between gap-4">
-          <span className="rounded-lg bg-background px-3 py-1 text-sm font-semibold text-primary">
-            {categoryLabel}
-          </span>
-          <span className="text-sm text-white italic">{date}</span>
-        </div>
-
-        <h1 className="text-3xl font-bold text-white">{drop.title}</h1>
-
-        {drop.locked ? (
-          <p className="rounded-lg bg-background/40 p-4 text-white italic">
-            Ce drop est verrouillé. Rends-toi sur place pour l&apos;ouvrir.
-          </p>
-        ) : (
-          drop.content && <p className="text-lg font-thin text-white">{drop.content}</p>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_26rem] xl:grid-cols-[minmax(0,1fr)_30rem]">
+      <article className="self-start overflow-hidden rounded-xl border border-border bg-card">
+        {drop.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element -- images externes, hôtes inconnus
+          <img src={drop.imageUrl} alt={drop.title} className="aspect-video w-full object-cover" />
         )}
-        
-        <div>
-          <p className="text-sm text-white italic">
-            par <span className="text-accent">{drop.author.displayName}</span>
-            {drop.isMine && " (toi)"}
-          </p>
-          <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
-        </div>
 
-        <PresenceWidget dropId={drop.id} />
+        <div className="flex flex-col gap-5 p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground uppercase">
+              {categoryLabel}
+            </span>
+            <time dateTime={drop.createdAt} className="text-sm text-muted-foreground">
+              {date}
+            </time>
+          </div>
 
-        {drop.isMine && 
-        <div className="flex">
-          <EditDropButton dropId={drop.id} />
-          <DeleteDropButton dropId={drop.id} />
-        </div>
-        }
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold text-primary sm:text-4xl">{drop.title}</h1>
+            <p className="text-sm text-muted-foreground">
+              par <span className="font-semibold text-accent">{drop.author.displayName}</span>
+              {drop.isMine && " (toi)"}
+            </p>
+          </div>
 
-        <div className="flex flex-wrap gap-3 border-t border-white/20 pt-4 text-sm font-semibold text-white">
-          <span className={`rounded-lg px-3 py-1 ${drop.likedByMe ? "bg-accent" : "bg-background/40"}`}>
-            <LikesCount dropId={drop.id} initial={drop.likesCount} />
-          </span>
-          <span className="rounded-lg bg-background/40 px-3 py-1">
-            {drop.commentsCount} commentaire{drop.commentsCount > 1 && "s"}
-          </span>
-          <span className="rounded-lg bg-background/40 px-3 py-1">
-            {drop.opensCount} ouverture{drop.opensCount > 1 && "s"}
-          </span>
-          <span className="rounded-lg bg-background/40 px-3 py-1">
-            📍 {drop.location.lat.toFixed(4)}, {drop.location.lng.toFixed(4)}
-            {drop.location.precision === "approx" && " (approx.)"}
-          </span>
+          {drop.locked ? (
+            <p className="rounded-lg border border-dashed border-border p-4 text-muted-foreground">
+              Ce drop est verrouillé. Rends-toi sur place pour l&apos;ouvrir.
+            </p>
+          ) : (
+            drop.content && <p className="text-lg leading-relaxed text-primary">{drop.content}</p>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
+            <PresenceWidget dropId={drop.id} />
+          </div>
+
+          {drop.isMine && (
+            <div className="flex flex-wrap gap-2">
+              <EditDropButton dropId={drop.id} />
+              <DeleteDropButton dropId={drop.id} />
+            </div>
+          )}
+
+          <ul className="flex flex-wrap gap-2 border-t border-border pt-5 text-xs font-semibold text-muted-foreground">
+            <li className="rounded-full border border-border px-3 py-1">
+              <LikesCount dropId={drop.id} initial={drop.likesCount} />
+            </li>
+            <li className="rounded-full border border-border px-3 py-1">
+              {drop.commentsCount} commentaire{drop.commentsCount > 1 && "s"}
+            </li>
+            <li className="rounded-full border border-border px-3 py-1">
+              {drop.opensCount} ouverture{drop.opensCount > 1 && "s"}
+            </li>
+            <li className="rounded-full border border-border px-3 py-1">
+              📍 {drop.location.lat.toFixed(4)}, {drop.location.lng.toFixed(4)}
+              {drop.location.precision === "approx" && " (approx.)"}
+            </li>
+          </ul>
         </div>
+      </article>
+
+      <aside className="flex flex-col gap-6">
         <DropMap
           label={`Carte : ${drop.title}`}
           points={[
@@ -99,24 +109,15 @@ export default async function DropDetail(props: Props) {
               approx: drop.location.precision === "approx",
             },
           ]}
-          style="h-72 w-full"
         />
+        <div className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6">
+          <Suspense fallback={<p className="text-sm text-muted-foreground">Chargement des commentaires...</p>}>
+            <CommentList dropId={drop.id} />
+          </Suspense>
+          <CommentForm dropId={drop.id} />
+        </div>
+      </aside>
       </div>
-
-      <Suspense fallback={<p className="px-6 py-4 text-sm text-white italic">Chargement des commentaires...</p>}>
-        <CommentList dropId={drop.id} />
-      </Suspense>
-
-      <CommentForm dropId={drop.id} />
-
-      <div className="px-6 pb-6">
-        <Link
-          href="/drops"
-          className="inline-block rounded-lg bg-primary p-3 font-semibold text-background transition duration-100 ease-in hover:-translate-y-0.5"
-        >
-          ← Retour aux drops
-        </Link>
-      </div>
-    </article>
+    </div>
   );
 }

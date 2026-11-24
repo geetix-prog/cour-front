@@ -1,13 +1,10 @@
-import { apiGet } from "@/lib/api/client";
 import type { Category } from "@/lib/api/types";
+import { getCategories } from "@/lib/api/categories";
 import CategoryButtons from "@/components/CategoryButtons";
 
-export default async function DropList() {
-  const items = await apiGet<Category[]>("/categories");
-
-  if (items.length === 0) {
-    return;
-  }
+export default async function DropCategorie() {
+  const items: Category[] = await getCategories();
+  if (items.length === 0) return null;
 
   return <CategoryButtons items={items} />;
 }

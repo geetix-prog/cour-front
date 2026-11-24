@@ -32,7 +32,7 @@ export async function createDrop(_prev: createDropState, form: FormData): Promis
       category: form.get('category'),
       lat: rawLat ? Number(rawLat) : 47.49561,
       lng: rawLng ? Number(rawLng) : 6.80544,
-      imageUrl: form.get('image'),
+      imageUrl: form.get('image') || null,
     };
     await apiPost("/drops", body);
   } catch (error) {
