@@ -48,9 +48,9 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
       if (cancelled) return;
 
       const map = L.map(container);
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: "Tiles &copy; Esri",
-        maxZoom: 19,
+      L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
+        minZoom: 0,
+        maxZoom: 20,
       }).addTo(map);
 
       leafletRef.current = L;

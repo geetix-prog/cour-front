@@ -34,10 +34,12 @@ export default function AddMapPoint({ value, onChange }: Props) {
         if (cancelled) return;
 
         const map = L.map(container).setView([46.6, 2.5], 5);
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
+            minZoom: 0,
+            maxZoom: 20,
         }).addTo(map);
+
+        L.control.scale().addTo(map)
 
         map.on("click", (e) => {
             onChangeRef.current({
