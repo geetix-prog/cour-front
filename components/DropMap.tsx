@@ -26,7 +26,7 @@ function popupContent(point: MapPoint) {
   return link;
 }
 
-export default function DropMap({ points, label = "Carte des drops", style }: Props) {
+export default function DropMap({ points, label = "Carte des drops", style = "h-72 w-full" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const pointsKey = JSON.stringify(points);
@@ -47,6 +47,7 @@ export default function DropMap({ points, label = "Carte des drops", style }: Pr
 
       
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
         maxZoom: 19,
       }).addTo(map);
 
@@ -86,7 +87,7 @@ export default function DropMap({ points, label = "Carte des drops", style }: Pr
       ref={containerRef}
       role="region"
       aria-label={label}
-      className={`isolate ${style} overflow-hidden rounded-lg`}
+      className={`isolate overflow-hidden rounded-xl border border-border ${style}`}
     />
   );
 }
