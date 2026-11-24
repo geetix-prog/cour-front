@@ -1,7 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
+import DislikeButton from "./DislikeButton";
 import LikesCount from "./LikesCount";
+import DislikesCount from "./DislikesCount";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import EditDropButton from "./EditDropButton";
@@ -67,7 +69,10 @@ export default async function DropDetail(props: Props) {
             )}
 
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
+              <div className="flex items-center gap-2">
+                <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
+                <DislikeButton dropId={drop.id} disliked={drop.dislikedByMe} dislikeCount={drop.dislikesCount} />
+              </div>
               <PresenceWidget dropId={drop.id} />
             </div>
 
@@ -81,6 +86,9 @@ export default async function DropDetail(props: Props) {
             <ul className="flex flex-wrap gap-2 border-t border-border pt-5 text-xs font-semibold text-muted-foreground">
               <li className="rounded-full border border-border px-3 py-1">
                 <LikesCount dropId={drop.id} initial={drop.likesCount} />
+              </li>
+              <li className="rounded-full border border-border px-3 py-1">
+                <DislikesCount dropId={drop.id} initial={drop.dislikesCount} />
               </li>
               <li className="rounded-full border border-border px-3 py-1">
                 {drop.commentsCount} commentaire{drop.commentsCount > 1 && "s"}

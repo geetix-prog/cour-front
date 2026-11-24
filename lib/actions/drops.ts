@@ -19,6 +19,18 @@ export async function toggleLiked(dropId: number, liked: boolean): Promise<Actio
   return {};
 }
 
+export async function toggleDisliked(dropId: number, disliked: boolean): Promise<ActionState> {
+  await requireSession();
+  try {
+    if (disliked) await apiDelete(`/drops/${dropId}/dislike`);
+    else await apiPost(`/drops/${dropId}/dislike`);
+  } catch (error) {
+    return actionError(error);
+  }
+  refresh();
+  return {};
+}
+
 export async function createDrop(_prev: ActionState, form: FormData): Promise<ActionState> {
   await requireSession();
   const rawLat = form.get("lat");

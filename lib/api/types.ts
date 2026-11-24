@@ -2,8 +2,8 @@ import type { components } from "@/lib/api/schema";
 
 type S = components["schemas"];
 
-export type Drop = S["Drop"];
-export type DropPage = S["DropPage"];
+export type Drop = S["Drop"] & { dislikesCount: number; dislikedByMe: boolean };
+export type DropPage = Omit<S["DropPage"], "items"> & { items: Drop[] };
 export type Category = S["Category"];
 export type Health = S["Health"];
 export type AuthResponse = S["AuthResponse"];

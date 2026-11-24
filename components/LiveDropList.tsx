@@ -5,6 +5,7 @@ import type { Drop } from "@/lib/api/types";
 import { useDrops, type DropFilter } from "@/lib/hooks/use-drops";
 import mapPoint from "@/app/assets/mapPoint.png";
 import LikeButton from "./LikeButton";
+import DislikeButton from "./DislikeButton";
 
 type Props = {
   initial: Drop[];
@@ -51,8 +52,9 @@ export default function LiveDropList({ initial, filter }: Props) {
               <span className="truncate text-muted-foreground">
                 par <span className="font-semibold text-accent">{drop.author.displayName}</span>
               </span>
-              <div className="relative z-10 shrink-0">
+              <div className="relative z-10 flex shrink-0 items-center gap-1.5">
                 <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
+                <DislikeButton dropId={drop.id} disliked={drop.dislikedByMe} dislikeCount={drop.dislikesCount} />
               </div>
             </div>
           </div>
