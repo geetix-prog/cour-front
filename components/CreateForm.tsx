@@ -1,5 +1,5 @@
 "use client";
-import { use, useActionState } from "react";
+import { use, useActionState, useState } from "react";
 import { createDrop, type createDropState } from "@/lib/actions/drops";
 import type { Category } from "@/lib/api/types";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AddMapPoint, { type LatLng } from "@/components/AddMapPoint";
 
 type Props = {
   categories: Promise<Category[]>;
@@ -16,6 +17,18 @@ export default function CreateForm(props: Props) {
   const [state, action, pending] = useActionState(createDrop, {} as createDropState);
   const categories = use(props.categories);
   const items = categories.map((category) => ({ value: category.id, label: category.label }));
+
+  // Texte des deux champs : on garde des chaînes pour permettre une saisie en cours (« 47. »).
+  const [coords, setCoords] = useState({ lat: "", lng: "" });
+
+  // Position du marqueur : seulement quand les deux champs contiennent des nombres valides.
+  const lat = Number.parseFloat(coords.lat);
+  const lng = Number.parseFloat(coords.lng);
+  const position: LatLng | null = Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+
+  function handleMapClick(next: LatLng) {
+    setCoords({ lat: String(next.lat), lng: String(next.lng) });
+  }
 
   return (
     <form action={action} className="flex flex-col gap-6 rounded-xl border border-border bg-card p-6 sm:p-8">
@@ -47,17 +60,39 @@ export default function CreateForm(props: Props) {
           <FieldLabel htmlFor="content">Contenu</FieldLabel>
           <Textarea id="content" name="content" rows={4} required />
         </Field>
+        <Field>
+          <FieldLabel>Position</FieldLabel>
+          <AddMapPoint value={position} onChange={handleMapClick} />
+          <FieldDescription>
+            Clique sur la carte pour placer le drop, ou saisis les coordonnées. Laisse vide pour la position par défaut.
+          </FieldDescription>
+        </Field>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="lat">Latitude</FieldLabel>
-            <Input id="lat" name="lat" type="number" step="any" placeholder="47.49561" />
+            <Input
+              id="lat"
+              name="lat"
+              type="number"
+              step="any"
+              placeholder="47.49561"
+              value={coords.lat}
+              onChange={(e) => setCoords((c) => ({ ...c, lat: e.target.value }))}
+            />
           </Field>
           <Field>
             <FieldLabel htmlFor="lng">Longitude</FieldLabel>
-            <Input id="lng" name="lng" type="number" step="any" placeholder="6.80544" />
+            <Input
+              id="lng"
+              name="lng"
+              type="number"
+              step="any"
+              placeholder="6.80544"
+              value={coords.lng}
+              onChange={(e) => setCoords((c) => ({ ...c, lng: e.target.value }))}
+            />
           </Field>
         </div>
-        <FieldDescription>Laisse vide pour utiliser la position par défaut.</FieldDescription>
         <Field>
           <FieldLabel htmlFor="image">Image (URL)</FieldLabel>
           <Input id="image" name="image" type="url" placeholder="https://..." />
