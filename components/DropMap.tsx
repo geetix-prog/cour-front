@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { Icon, LayerGroup, Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import mapPoint from "@/app/assets/mapPoint.png";
 
@@ -17,6 +18,7 @@ type Props = {
   style?: string;
 };
 
+// Le titre vient des utilisateurs : on le met en texte, jamais en HTML, pour éviter toute injection.
 function popupContent(point: MapPoint) {
   const link = document.createElement("a");
   link.href = `/drops/${point.id}`;
@@ -28,59 +30,85 @@ function popupContent(point: MapPoint) {
 
 export default function DropMap({ points, label = "Carte des drops", style = "h-72 w-full" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const layerRef = useRef<LayerGroup | null>(null);
+  const leafletRef = useRef<typeof import("leaflet") | null>(null);
+  const iconRef = useRef<Icon | null>(null);
+  const framedRef = useRef(false);
+  const [ready, setReady] = useState(false);
 
+  // `points` est recréé à chaque rendu : on compare son contenu, pas sa référence.
   const pointsKey = JSON.stringify(points);
 
+  // 1. Création de la carte, une seule fois.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const list: MapPoint[] = JSON.parse(pointsKey);
+    // En dev, React monte / démonte / remonte : sans ce drapeau, deux cartes seraient créées.
     let cancelled = false;
-    let cleanup: (() => void) | undefined;
 
     // Import dynamique : Leaflet a besoin de `window`, il ne doit jamais être chargé côté serveur.
     import("leaflet").then(({ default: L }) => {
       if (cancelled) return;
 
       const map = L.map(container);
-
-      
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri',
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: "Tiles &copy; Esri",
         maxZoom: 19,
       }).addTo(map);
 
-      const icon = L.icon({
+      leafletRef.current = L;
+      iconRef.current = L.icon({
         iconUrl: mapPoint.src,
         iconSize: [50, 50],
         iconAnchor: [25, 50],
         popupAnchor: [0, -50],
       });
-
-      for (const point of list) {
-        const layer = point.approx
-          ? L.circle([point.lat, point.lng], { radius: 300 })
-          : L.marker([point.lat, point.lng], { icon });
-        layer.bindPopup(popupContent(point)).addTo(map);
-      }
-
-      if (list.length === 0) {
-        map.setView([46.6, 2.5], 5);
-      } else if (list.length === 1) {
-        map.setView([list[0].lat, list[0].lng], list[0].approx ? 14 : 16);
-      } else {
-        map.fitBounds(L.latLngBounds(list.map((p) => [p.lat, p.lng])), { padding: [40, 40] });
-      }
-
-      cleanup = () => map.remove();
+      layerRef.current = L.layerGroup().addTo(map);
+      mapRef.current = map;
+      setReady(true);
     });
 
     return () => {
       cancelled = true;
-      cleanup?.();
+      mapRef.current?.remove();
+      mapRef.current = null;
+      layerRef.current = null;
+      framedRef.current = false;
+      setReady(false);
     };
-  }, [pointsKey]);
+  }, []);
+
+  // 2. Marqueurs : remplacés quand les points changent, sans recréer la carte ni toucher au zoom.
+  useEffect(() => {
+    const L = leafletRef.current;
+    const map = mapRef.current;
+    const layer = layerRef.current;
+    if (!ready || !L || !map || !layer) return;
+
+    const list: MapPoint[] = JSON.parse(pointsKey);
+
+    layer.clearLayers();
+    for (const point of list) {
+      const marker = point.approx
+        ? L.circle([point.lat, point.lng], { radius: 300 })
+        : L.marker([point.lat, point.lng], { icon: iconRef.current ?? undefined });
+      marker.bindPopup(popupContent(point)).addTo(layer);
+    }
+
+    // On ne cadre qu'au premier affichage : un drop arrivé en direct ne doit pas déplacer la vue.
+    if (framedRef.current) return;
+    framedRef.current = true;
+
+    if (list.length === 0) {
+      map.setView([46.6, 2.5], 5);
+    } else if (list.length === 1) {
+      map.setView([list[0].lat, list[0].lng], list[0].approx ? 14 : 16);
+    } else {
+      map.fitBounds(L.latLngBounds(list.map((p) => [p.lat, p.lng])), { padding: [40, 40] });
+    }
+  }, [ready, pointsKey]);
 
   return (
     <div
