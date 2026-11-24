@@ -19,5 +19,5 @@ export default function LiveDropsMap({ initial, style }: Props) {
     approx: drop.location.precision === "approx",
   }));
 
-  return <DropMap points={points} label="Carte de tous les drops" style={style} />;
+  return <DropMap points={points} label="Carte de tous les drops" style={style} searchable />;
 }

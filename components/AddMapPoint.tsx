@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker, Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import mapPoint from "@/app/assets/mapPoint.png";
+import type { Place } from "@/lib/geocode";
+import MapSearch from "./MapSearch";
 
 export type LatLng = { lat: number; lng: number };
 
@@ -39,18 +41,7 @@ export default function AddMapPoint({ value, onChange }: Props) {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map);
 
-        L.control.scale().addTo(map)
-
-        var searchControl = new L.esri.Controls.Geosearch().addTo(map);
-
-            var results = new L.LayerGroup().addTo(map);
-
-              searchControl.on('results', function(data){
-                results.clearLayers();
-                for (var i = data.results.length - 1; i >= 0; i--) {
-                  results.addLayer(L.marker(data.results[i].latlng));
-                }
-              });
+        L.control.scale({ imperial: false }).addTo(map);
 
         map.on("click", (e) => {
             onChangeRef.current({
@@ -96,12 +87,38 @@ export default function AddMapPoint({ value, onChange }: Props) {
         }
     }, [ready, value]);
 
+    // --- Recherche de lieu ---
+
+    /**
+     * Appelée par MapSearch quand on choisit un lieu : la carte s'y déplace.
+     * On ne pose PAS le marqueur ici : l'utilisateur clique ensuite à l'endroit exact du drop.
+     */
+    function goTo(place: Place) {
+        const map = mapRef.current;
+        if (!map) return;
+        // Lieu avec une zone (ville, grand bâtiment) : on cadre toute la zone.
+        if (place.bounds) map.flyToBounds(place.bounds, { maxZoom: 17 });
+        // Simple point (une adresse) : on centre dessus avec un zoom de niveau « rue ».
+        else map.flyTo([place.lat, place.lng], 16);
+    }
+
+    /** Donne à MapSearch le centre actuel de la carte, pour favoriser les résultats proches. */
+    function getCenter() {
+        const center = mapRef.current?.getCenter();
+        return center ? { lat: center.lat, lng: center.lng } : undefined;
+    }
+
     return (
-        <div
-        ref={containerRef}
-        role="region"
-        aria-label="Carte : clique pour placer le drop"
-        className="isolate h-72 w-full cursor-crosshair overflow-hidden rounded-xl border border-border"
-        />
+        // Conteneur en `relative` : la carte le remplit et la recherche se pose par-dessus.
+        // La recherche est en dehors de la div de Leaflet : cliquer dedans ne place pas de marqueur.
+        <div className="relative isolate h-72 w-full overflow-hidden rounded-xl border border-border">
+            <div
+                ref={containerRef}
+                role="region"
+                aria-label="Carte : clique pour placer le drop"
+                className="h-full w-full cursor-crosshair"
+            />
+            <MapSearch onSelect={goTo} getCenter={getCenter} />
+        </div>
     );
 }

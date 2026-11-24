@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Icon, LayerGroup, Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import mapPoint from "@/app/assets/mapPoint.png";
+import type { Place } from "@/lib/geocode";
+import MapSearch from "./MapSearch";
 
 export type MapPoint = {
   id: number;
@@ -16,6 +18,7 @@ type Props = {
   points: MapPoint[];
   label?: string;
   style?: string;
+  searchable?: boolean;
 };
 
 function popupContent(point: MapPoint) {
@@ -27,7 +30,7 @@ function popupContent(point: MapPoint) {
   return link;
 }
 
-export default function DropMap({ points, label = "Carte des drops", style = "h-72 w-full" }: Props) {
+export default function DropMap({ points, label = "Carte des drops", style = "h-72 w-full", searchable = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const layerRef = useRef<LayerGroup | null>(null);
@@ -103,12 +106,31 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
     }
   }, [ready, pointsKey]);
 
+  // --- Recherche de lieu (affichée seulement si `searchable`) ---
+
+  /** Appelée par MapSearch quand on choisit un lieu : la carte s'y déplace avec une animation. */
+  function goTo(place: Place) {
+    const map = mapRef.current;
+    if (!map) return;
+    // Lieu avec une zone (ville, grand bâtiment) : on cadre toute la zone, sans zoomer à l'excès.
+    if (place.bounds) map.flyToBounds(place.bounds, { maxZoom: 17 });
+    // Simple point (une adresse) : on centre dessus avec un zoom de niveau « rue ».
+    else map.flyTo([place.lat, place.lng], 16);
+  }
+
+  /** Donne à MapSearch le centre actuel de la carte, pour favoriser les résultats proches. */
+  function getCenter() {
+    const center = mapRef.current?.getCenter();
+    return center ? { lat: center.lat, lng: center.lng } : undefined;
+  }
+
   return (
-    <div
-      ref={containerRef}
-      role="region"
-      aria-label={label}
-      className={`isolate overflow-hidden rounded-xl border border-border ${style}`}
-    />
+    // Conteneur en `relative` : la carte le remplit, et la recherche (en `absolute`) se pose
+    // par-dessus. La recherche n'est pas DANS la div de Leaflet, donc taper ou scroller
+    // dans la liste ne fait pas bouger la carte.
+    <div className={`relative isolate overflow-hidden rounded-xl border border-border ${style}`}>
+      <div ref={containerRef} role="region" aria-label={label} className="h-full w-full" />
+      {searchable && <MapSearch onSelect={goTo} getCenter={getCenter} />}
+    </div>
   );
 }
