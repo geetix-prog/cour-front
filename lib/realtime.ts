@@ -28,7 +28,14 @@ async function connect() {
     connecting = true;
     try {
         const res = await fetch('/api/realtime/ticket', { method: 'POST' });
-        if (!res.ok) return;
+        if (res.status === 401) {
+            sessionExpired();
+            return;
+        }
+        if (!res.ok) {
+            if (consumers > 0) scheduleReconnect();
+            return;
+        }
         const { url } = await res.json();
         if (consumers === 0 || socket) return;
         open(url);
@@ -37,6 +44,12 @@ async function connect() {
     } finally {
         connecting = false;
     }
+}
+
+function sessionExpired() {
+    disconnect();
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.assign('/api/auth/expired');
 }
 
 function open(url: string) {
@@ -54,6 +67,10 @@ function open(url: string) {
     };
     ws.onclose = (event) => {
         if (socket === ws) socket = null;
+        if (event.code === 4001) {
+            sessionExpired();
+            return;
+        }
         if (consumers === 0 || NO_RECONNECT.includes(event.code)) return;
         scheduleReconnect();
     };

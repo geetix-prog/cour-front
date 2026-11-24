@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useOptimistic } from "react";
 import { toggleLiked } from "@/lib/actions/drops";
+import type { ActionState } from "@/lib/api/errors";
 import { useLike } from "@/lib/hooks/use-like";
 
 interface Props {
@@ -14,9 +15,6 @@ export default function LikeButton({ dropId, liked, likeCount }: Props) {
 
   type LikeView = { liked: boolean; likeCount: number };
 
-  // L'état optimiste est une valeur absolue calculée au clic, pas un « +1 » relatif :
-  // sinon, quand `like:updated` arrive pendant l'action (le serveur le diffuse aussi à soi-même),
-  // le +1 serait réappliqué sur un compteur qui inclut déjà notre like (on verrait 2 au lieu de 1).
   const [optimistic, setOptimistic] = useOptimistic<LikeView, LikeView>(
     { liked, likeCount: liveCount },
     (_current, next) => next,
@@ -25,7 +23,7 @@ export default function LikeButton({ dropId, liked, likeCount }: Props) {
   const [state, action, pending] = useActionState(async () => {
     setOptimistic({ liked: !liked, likeCount: liveCount + (liked ? -1 : 1) });
     return toggleLiked(dropId, liked);
-  }, {});
+  }, {} as ActionState);
 
   return (
     <form action={action} className="inline-flex flex-col items-end gap-1">

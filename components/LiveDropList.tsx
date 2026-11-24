@@ -41,7 +41,6 @@ export default function LiveDropList({ initial, filter }: Props) {
           <div className="flex flex-1 flex-col gap-3 p-4">
             <div className="flex flex-col gap-1">
               <h2 className="line-clamp-1 text-lg font-bold text-primary">
-                {/* Le lien couvre toute la carte (after:inset-0) sans englober le bouton like. */}
                 <Link href={`/drops/${drop.id}`} className="after:absolute after:inset-0 after:content-['']">
                   {drop.title}
                 </Link>

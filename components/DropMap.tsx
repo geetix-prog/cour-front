@@ -18,7 +18,6 @@ type Props = {
   style?: string;
 };
 
-// Le titre vient des utilisateurs : on le met en texte, jamais en HTML, pour éviter toute injection.
 function popupContent(point: MapPoint) {
   const link = document.createElement("a");
   link.href = `/drops/${point.id}`;
@@ -37,18 +36,14 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
   const framedRef = useRef(false);
   const [ready, setReady] = useState(false);
 
-  // `points` est recréé à chaque rendu : on compare son contenu, pas sa référence.
   const pointsKey = JSON.stringify(points);
 
-  // 1. Création de la carte, une seule fois.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // En dev, React monte / démonte / remonte : sans ce drapeau, deux cartes seraient créées.
     let cancelled = false;
 
-    // Import dynamique : Leaflet a besoin de `window`, il ne doit jamais être chargé côté serveur.
     import("leaflet").then(({ default: L }) => {
       if (cancelled) return;
 
@@ -80,7 +75,6 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
     };
   }, []);
 
-  // 2. Marqueurs : remplacés quand les points changent, sans recréer la carte ni toucher au zoom.
   useEffect(() => {
     const L = leafletRef.current;
     const map = mapRef.current;
@@ -97,7 +91,6 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
       marker.bindPopup(popupContent(point)).addTo(layer);
     }
 
-    // On ne cadre qu'au premier affichage : un drop arrivé en direct ne doit pas déplacer la vue.
     if (framedRef.current) return;
     framedRef.current = true;
 

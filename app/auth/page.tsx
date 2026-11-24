@@ -1,18 +1,25 @@
 "use client";
 
-import { useActionState } from "react";
-import { login, register, type LoginState, type RegisterState } from "@/lib/actions/auth";
+import { Suspense, useActionState } from "react";
+import { login, register } from "@/lib/actions/auth";
+import type { ActionState } from "@/lib/api/errors";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import SessionExpiredNotice from "@/components/SessionExpiredNotice";
 
 export default function Auth() {
-  const [loginState, loginAction, loginPending] = useActionState(login, {} as LoginState);
-  const [registerState, registerAction, registerPending] = useActionState(register, {} as RegisterState);
+  const [loginState, loginAction, loginPending] = useActionState(login, {} as ActionState);
+  const [registerState, registerAction, registerPending] = useActionState(register, {} as ActionState);
+
 
   return (
     <div className="mx-auto grid w-full max-w-5xl gap-6 px-4 py-10 sm:px-6 md:grid-cols-2">
+      <Suspense>
+        <SessionExpiredNotice />
+      </Suspense>
+
       <section className="rounded-xl border border-border bg-card p-6 sm:p-8">
         <h1 className="text-2xl font-bold text-primary">Connexion</h1>
         <p className="mt-1 text-sm text-muted-foreground">Content de te revoir.</p>
@@ -21,11 +28,23 @@ export default function Auth() {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="login">Nom d&apos;utilisateur ou email</FieldLabel>
-              <Input id="login" name="login" type="text" autoComplete="username" required />
+              <Input
+                id="login"
+                name="login"
+                type="text"
+                autoComplete="username"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
-              <Input id="password" name="password" type="password" autoComplete="current-password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+              />
             </Field>
           </FieldGroup>
 
@@ -49,15 +68,32 @@ export default function Auth() {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="username">Nom d&apos;utilisateur</FieldLabel>
-              <Input id="username" name="username" type="text" autoComplete="username" required />
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" name="email" type="email" autoComplete="email" required />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="displayName">Nom affiché</FieldLabel>
-              <Input id="displayName" name="displayName" type="text" required />
+              <Input
+                id="displayName"
+                name="displayName"
+                type="text"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="bio">Bio</FieldLabel>
@@ -65,7 +101,13 @@ export default function Auth() {
             </Field>
             <Field>
               <FieldLabel htmlFor="registerPassword">Mot de passe</FieldLabel>
-              <Input id="registerPassword" name="registerPassword" type="password" autoComplete="new-password" required />
+              <Input
+                id="registerPassword"
+                name="registerPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+              />
               <FieldDescription>Au moins 4 caractères.</FieldDescription>
             </Field>
           </FieldGroup>

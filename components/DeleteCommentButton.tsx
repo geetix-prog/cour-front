@@ -1,6 +1,7 @@
 "use client";
 import { useActionState } from "react";
-import { deleteDropComment, type CommentState } from "@/lib/actions/drops";
+import { deleteDropComment } from "@/lib/actions/drops";
+import type { ActionState } from "@/lib/api/errors";
 
 type Props = {
   commentId: number;
@@ -9,7 +10,7 @@ type Props = {
 export default function DeleteCommentButton({ commentId }: Props) {
   const [state, action, pending] = useActionState(
     () => deleteDropComment(commentId),
-    {} as CommentState,
+    {} as ActionState,
   );
 
   return (

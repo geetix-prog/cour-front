@@ -1,6 +1,7 @@
 "use client";
 import { useActionState } from "react";
-import { createDropComment, type CommentState } from "@/lib/actions/drops";
+import { createDropComment } from "@/lib/actions/drops";
+import type { ActionState } from "@/lib/api/errors";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -12,13 +13,19 @@ type Props = {
 export default function CommentForm({ dropId }: Props) {
   const [state, action, pending] = useActionState(
     createDropComment.bind(null, String(dropId)),
-    {} as CommentState,
+    {} as ActionState,
   );
 
   return (
     <form action={action} className="flex flex-col gap-3">
       <Label htmlFor="comment-content">Ajouter un commentaire</Label>
-      <Textarea id="comment-content" name="content" required rows={3} placeholder="Écris ton commentaire..." />
+      <Textarea
+        id="comment-content"
+        name="content"
+        required
+        rows={3}
+        placeholder="Écris ton commentaire..."
+      />
       {state.error && (
         <p role="alert" className="text-sm text-destructive">
           {state.error}
