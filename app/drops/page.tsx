@@ -2,7 +2,8 @@ import { Suspense } from "react";
 import DropList from "@/components/DropList";
 import CategorySearch from "@/components/CategorySearch";
 import DropCategorie from "@/components/DropCategorie";
-import OnlineWidget from "@/components/OnlineWidget"
+import OnlineWidget from "@/components/OnlineWidget";
+import DropMap from "@/components/DropMap";
 
 export default function Drops({ searchParams }: PageProps<"/drops">) {
   const category = searchParams.then((params) => params.category);

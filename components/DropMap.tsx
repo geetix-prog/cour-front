@@ -1,39 +1,74 @@
 "use client";
 import { useEffect, useRef } from "react";
-import "leaflet/styles.css";
+import "leaflet/dist/leaflet.css";
+import mapPoint from "@/app/assets/mapPoint.png";
 
-type Props = {
+export type MapPoint = {
+  id: number;
   lat: number;
   lng: number;
   title: string;
   approx?: boolean;
 };
 
-export default function DropMap({ lat, lng, title, approx = false }: Props) {
+type Props = {
+  points: MapPoint[];
+  label?: string;
+};
+
+function popupContent(point: MapPoint) {
+  const link = document.createElement("a");
+  link.href = `/drops/${point.id}`;
+  const strong = document.createElement("b");
+  strong.textContent = point.approx ? `${point.title} (position approximative)` : point.title;
+  link.append(strong);
+  return link;
+}
+
+export default function DropMap({ points, label = "Carte des drops" }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const pointsKey = JSON.stringify(points);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    const list: MapPoint[] = JSON.parse(pointsKey);
     let cancelled = false;
     let cleanup: (() => void) | undefined;
 
     // Import dynamique : Leaflet a besoin de `window`, il ne doit jamais être chargé côté serveur.
-    import("leaflet").then(({ LeafletMap, TileLayer, Marker, Circle }) => {
+    import("leaflet").then(({ default: L }) => {
       if (cancelled) return;
 
-      const map = new LeafletMap(container).setView([lat, lng], approx ? 14 : 16);
+      const map = L.map(container);
 
-      new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
-      if (approx) {
-        new Circle([lat, lng], { radius: 300 }).addTo(map).bindPopup(`${title} (position approximative)`);
+      const icon = L.icon({
+        iconUrl: mapPoint.src,
+        iconSize: [50, 50],
+        iconAnchor: [25, 50],
+        popupAnchor: [0, -50],
+      });
+
+      for (const point of list) {
+        const layer = point.approx
+          ? L.circle([point.lat, point.lng], { radius: 300 })
+          : L.marker([point.lat, point.lng], { icon });
+        layer.bindPopup(popupContent(point)).addTo(map);
+      }
+
+      if (list.length === 0) {
+        map.setView([46.6, 2.5], 5);
+      } else if (list.length === 1) {
+        map.setView([list[0].lat, list[0].lng], list[0].approx ? 14 : 16);
       } else {
-        new Marker([lat, lng]).addTo(map).bindPopup(title);
+        map.fitBounds(L.latLngBounds(list.map((p) => [p.lat, p.lng])), { padding: [40, 40] });
       }
 
       cleanup = () => map.remove();
@@ -43,13 +78,13 @@ export default function DropMap({ lat, lng, title, approx = false }: Props) {
       cancelled = true;
       cleanup?.();
     };
-  }, [lat, lng, title, approx]);
+  }, [pointsKey]);
 
   return (
     <div
       ref={containerRef}
       role="region"
-      aria-label={`Carte : ${title}`}
+      aria-label={label}
       className="isolate h-72 w-full overflow-hidden rounded-lg"
     />
   );

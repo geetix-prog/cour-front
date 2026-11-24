@@ -85,10 +85,16 @@ export default async function DropDetail(props: Props) {
           </span>
         </div>
         <DropMap
-          lat={drop.location.lat}
-          lng={drop.location.lng}
-          title={drop.title}
-          approx={drop.location.precision === "approx"}
+          label={`Carte : ${drop.title}`}
+          points={[
+            {
+              id: drop.id,
+              lat: drop.location.lat,
+              lng: drop.location.lng,
+              title: drop.title,
+              approx: drop.location.precision === "approx",
+            },
+          ]}
         />
       </div>
 
