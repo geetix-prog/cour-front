@@ -47,7 +47,6 @@ export default function DropMap({ points, label = "Carte des drops", style }: Pr
 
       
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri',
         maxZoom: 19,
       }).addTo(map);
 
