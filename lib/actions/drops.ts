@@ -43,6 +43,20 @@ export async function createDrop(_prev: createDropState, form: FormData): Promis
   redirect("/drops");
 }
 
+export type DropState = { error?: string };
+
+export async function deleteDrop(dropId: string) {
+  await requireSession();
+  try {
+    await apiDelete(`/drops/${dropId}`);
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Une erreur est survenue",
+    };
+  }
+  redirect("/drops");
+}
+
 export type CommentState = { error?: string };
 
 export async function createDropComment(dropId: string, _prev: CommentState, form: FormData): Promise<CommentState> {

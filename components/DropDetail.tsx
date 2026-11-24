@@ -9,6 +9,7 @@ import { getCategories } from "@/lib/api/categories";
 import EditDropButton from "./EditDropButton";
 import PresenceWidget from "./PresenceWidget";
 import DropMap from "./DropMap";
+import DeleteDropButton from "./DeleteDropButton";
 
 type Props = {
   id: Promise<string>;
@@ -66,7 +67,10 @@ export default async function DropDetail(props: Props) {
         <PresenceWidget dropId={drop.id} />
 
         {drop.isMine && 
+        <div className="flex">
           <EditDropButton dropId={drop.id} />
+          <DeleteDropButton dropId={drop.id} />
+        </div>
         }
 
         <div className="flex flex-wrap gap-3 border-t border-white/20 pt-4 text-sm font-semibold text-white">
