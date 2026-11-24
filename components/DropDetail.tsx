@@ -99,6 +99,7 @@ export default async function DropDetail(props: Props) {
               approx: drop.location.precision === "approx",
             },
           ]}
+          style="h-72 w-full"
         />
       </div>
 
