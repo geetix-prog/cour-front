@@ -13,8 +13,10 @@ export async function getDropComments(dropId: string | number) {
   return apiGet<CommentPage>(`/drops/${dropId}/comments`);
 }
 
-export async function getDrops(params?: URLSearchParams) {
+export async function getDrops(page: number, params?: URLSearchParams) {
   await requireSession();
-  const query = params?.toString();
-  return apiGet<DropPage>(`/drops${query ? `?${query}` : ""}`);
+  const query = new URLSearchParams(params);
+  query.set("page", String(page));
+  query.set("pageSize", "20");
+  return apiGet<DropPage>(`/drops?${query}`);
 }

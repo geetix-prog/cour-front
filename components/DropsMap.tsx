@@ -6,6 +6,6 @@ type Props = {
 };
 
 export default async function DropsMap({ style }: Props) {
-  const { items } = await getDrops();
+  const { items } = await getDrops(1);
   return <LiveDropsMap initial={items} style={style} />;
 }

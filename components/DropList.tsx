@@ -19,7 +19,7 @@ export default async function DropList(props: Props) {
   if (filter.category) params.set("category", filter.category);
   if (filter.q) params.set("q", filter.q);
 
-  const { items } = await getDrops(params);
+  const { items } = await getDrops(1, params);
 
   return <LiveDropList initial={items} filter={filter} />;
 }
