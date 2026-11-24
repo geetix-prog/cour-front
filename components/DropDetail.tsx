@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import LikeButton from "./LikeButton";
+import LikesCount from "./LikesCount";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import { getDrop } from "@/lib/api/drops";
@@ -70,7 +71,7 @@ export default async function DropDetail(props: Props) {
 
         <div className="flex flex-wrap gap-3 border-t border-white/20 pt-4 text-sm font-semibold text-white">
           <span className={`rounded-lg px-3 py-1 ${drop.likedByMe ? "bg-accent" : "bg-background/40"}`}>
-            {drop.likesCount} j&apos;aime
+            <LikesCount dropId={drop.id} initial={drop.likesCount} />
           </span>
           <span className="rounded-lg bg-background/40 px-3 py-1">
             {drop.commentsCount} commentaire{drop.commentsCount > 1 && "s"}
