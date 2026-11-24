@@ -97,7 +97,6 @@ export function send(type: string, data: object = {}) {
     if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type, data }));
 }
 
-/** Dernière liste connue des utilisateurs en ligne (reçue via `hello` ou `presence:online`). */
 export function getOnline() {
     return online;
 }
