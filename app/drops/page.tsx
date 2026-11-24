@@ -3,7 +3,7 @@ import DropList from "@/components/DropList";
 import CategorySearch from "@/components/CategorySearch";
 import DropCategorie from "@/components/DropCategorie";
 import OnlineWidget from "@/components/OnlineWidget";
-import DropMap from "@/components/DropMap";
+import DropsMap from "@/components/DropsMap";
 
 export default function Drops({ searchParams }: PageProps<"/drops">) {
   const category = searchParams.then((params) => params.category);
@@ -15,8 +15,8 @@ export default function Drops({ searchParams }: PageProps<"/drops">) {
         <h1 className="text-4xl font-bold">Les drops</h1>
         <OnlineWidget />
       </div>
-      <div className="flex w-full gap-5 justify-center">
-        <div className="1/3">
+      <div className="flex w-9/10 gap-5 justify-center">
+        <div className="w-1/3">
           <Suspense fallback={<p>Chargement des catégories...</p>}>
             <CategorySearch />
             <DropCategorie />
@@ -27,6 +27,9 @@ export default function Drops({ searchParams }: PageProps<"/drops">) {
             <DropList category={category} q={q} />
           </Suspense>
         </div>
+        <Suspense fallback={<p>Chargement de la carte...</p>}>
+          <DropsMap style="h-auto w-full" />
+        </  Suspense>
       </div>
     </div>
   );

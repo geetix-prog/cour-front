@@ -14,6 +14,7 @@ export type MapPoint = {
 type Props = {
   points: MapPoint[];
   label?: string;
+  style?: string;
 };
 
 function popupContent(point: MapPoint) {
@@ -25,7 +26,7 @@ function popupContent(point: MapPoint) {
   return link;
 }
 
-export default function DropMap({ points, label = "Carte des drops" }: Props) {
+export default function DropMap({ points, label = "Carte des drops", style }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const pointsKey = JSON.stringify(points);
@@ -44,9 +45,10 @@ export default function DropMap({ points, label = "Carte des drops" }: Props) {
 
       const map = L.map(container);
 
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
       const icon = L.icon({
@@ -85,7 +87,7 @@ export default function DropMap({ points, label = "Carte des drops" }: Props) {
       ref={containerRef}
       role="region"
       aria-label={label}
-      className="isolate h-72 w-full overflow-hidden rounded-lg"
+      className={`isolate ${style} overflow-hidden rounded-lg`}
     />
   );
 }
