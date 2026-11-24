@@ -34,12 +34,23 @@ export default function AddMapPoint({ value, onChange }: Props) {
         if (cancelled) return;
 
         const map = L.map(container).setView([46.6, 2.5], 5);
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
-            minZoom: 0,
-            maxZoom: 20,
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map);
 
         L.control.scale().addTo(map)
+
+        var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+
+            var results = new L.LayerGroup().addTo(map);
+
+              searchControl.on('results', function(data){
+                results.clearLayers();
+                for (var i = data.results.length - 1; i >= 0; i--) {
+                  results.addLayer(L.marker(data.results[i].latlng));
+                }
+              });
 
         map.on("click", (e) => {
             onChangeRef.current({

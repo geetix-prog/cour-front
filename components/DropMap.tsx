@@ -48,9 +48,9 @@ export default function DropMap({ points, label = "Carte des drops", style = "h-
       if (cancelled) return;
 
       const map = L.map(container);
-      L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_dark/{z}/{x}/{y}{r}.png', {
-        minZoom: 0,
-        maxZoom: 20,
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
       leafletRef.current = L;
