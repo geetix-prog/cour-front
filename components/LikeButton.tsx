@@ -12,14 +12,18 @@ interface Props {
 export default function LikeButton({ dropId, liked, likeCount }: Props) {
   const liveCount = useLike(dropId, likeCount);
 
-  const [optimistic, toggle] = useOptimistic(
+  type LikeView = { liked: boolean; likeCount: number };
+
+  // L'état optimiste est une valeur absolue calculée au clic, pas un « +1 » relatif :
+  // sinon, quand `like:updated` arrive pendant l'action (le serveur le diffuse aussi à soi-même),
+  // le +1 serait réappliqué sur un compteur qui inclut déjà notre like (on verrait 2 au lieu de 1).
+  const [optimistic, setOptimistic] = useOptimistic<LikeView, LikeView>(
     { liked, likeCount: liveCount },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `void` : toggle() s'appelle sans argument
-    (s, _: void) => ({ liked: !s.liked, likeCount: s.likeCount + (s.liked ? -1 : 1) }),
+    (_current, next) => next,
   );
 
   const [state, action, pending] = useActionState(async () => {
-    toggle();
+    setOptimistic({ liked: !liked, likeCount: liveCount + (liked ? -1 : 1) });
     return toggleLiked(dropId, liked);
   }, {});
 
