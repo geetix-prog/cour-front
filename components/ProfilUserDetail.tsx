@@ -1,5 +1,6 @@
 import { getUser } from "@/lib/api/user"
 import ProfilUser from "./ProfilUser";
+import DropList from "./DropList";
 
 interface Props {
     name: Promise<string>,
@@ -11,7 +12,7 @@ export default async function ProfilUserDetail(props: Props) {
     return (
         <div>
             <ProfilUser user={user}/>
-            
+            <DropList author={user.username} />
         </div>
     )
     }
