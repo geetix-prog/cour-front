@@ -7,8 +7,13 @@ export type DropPage = Omit<S["DropPage"], "items"> & { items: Drop[] };
 export type Category = S["Category"];
 export type Health = S["Health"];
 export type AuthResponse = S["AuthResponse"];
-export type Comment = S["Comment"];
-export type CommentPage = S["CommentPage"];
+// schema.d.ts n'est pas à jour : l'API renvoie aussi les champs des réponses.
+export type Comment = S["Comment"] & {
+  parentId: number | null;
+  deleted: boolean;
+  repliesCount: number;
+};
+export type CommentPage = Omit<S["CommentPage"], "items"> & { items: Comment[] };
 export type PublicUser = S["PublicUser"];
 export type Profile = S["Profile"];
 export type PrivateUser = S["PrivateUser"];

@@ -13,6 +13,11 @@ export async function getDropComments(dropId: string | number) {
   return apiGet<CommentPage>(`/drops/${dropId}/comments`);
 }
 
+export async function getCommentReplies(commentId: number, page = 1) {
+  await requireSession();
+  return apiGet<CommentPage>(`/comments/${commentId}/replies?page=${page}&pageSize=20`);
+}
+
 export async function getDrops(page?: number, params?: URLSearchParams, author?: string) {
   await requireSession();
   const query = new URLSearchParams(params);

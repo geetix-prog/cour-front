@@ -18,12 +18,20 @@ export function useComment(dropId: number, initial: CommentsState) {
         const release = retain();
 
         const stopCreated = subscribe('comment:created', ({ comment }: { comment: Comment }) => {
-            if (comment.dropId !== dropId) return;
+            if (comment.dropId !== dropId || comment.parentId !== null) return;
             setState((current) =>
                 current.items.some((c) => c.id === comment.id)
                     ? current
                     : { items: [...current.items, comment], total: current.total + 1 },
             );
+        });
+
+        const stopUpdated = subscribe('comment:updated', ({ comment }: { comment: Comment }) => {
+            if (comment.dropId !== dropId || comment.parentId !== null) return;
+            setState((current) => ({
+                ...current,
+                items: current.items.map((c) => (c.id === comment.id ? comment : c)),
+            }));
         });
 
         const stopDeleted = subscribe(
@@ -40,6 +48,7 @@ export function useComment(dropId: number, initial: CommentsState) {
 
         return () => {
             stopDeleted();
+            stopUpdated();
             stopCreated();
             release();
         };

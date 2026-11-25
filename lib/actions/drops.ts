@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { requireSession } from "../session";
 import { apiDelete, apiPatch, apiPost } from "../api/client";
 import { actionError, type ActionState } from "../api/errors";
+import { getCommentReplies } from "../api/drops";
+import type { Comment, CommentPage } from "../api/types";
 
 export type { ActionState };
 
@@ -73,6 +75,30 @@ export async function createDropComment(dropId: string, _prev: ActionState, form
   }
   refresh();
   return {};
+}
+
+export type ReplyState = ActionState & { comment?: Comment };
+
+export async function replyToComment(
+  dropId: number,
+  parentId: number,
+  _prev: ReplyState,
+  form: FormData,
+): Promise<ReplyState> {
+  await requireSession();
+  const content = String(form.get("content") ?? "").trim();
+  if (!content) return { error: "La réponse ne peut pas être vide." };
+
+  try {
+    const comment = await apiPost<Comment>(`/drops/${dropId}/comments`, { content, parentId });
+    return { comment };
+  } catch (error) {
+    return actionError(error);
+  }
+}
+
+export async function loadCommentReplies(commentId: number, page: number): Promise<CommentPage> {
+  return getCommentReplies(commentId, page);
 }
 
 export async function deleteDropComment(commentId: number): Promise<ActionState> {
