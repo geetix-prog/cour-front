@@ -50,7 +50,7 @@ export default function LiveDropList({ initial, filter }: Props) {
             </div>
             <div className="mt-auto flex items-center justify-between gap-3 text-sm">
               <span className="truncate text-muted-foreground">
-                par <span className="font-semibold text-accent">{drop.author.displayName}</span>
+                par <Link href={`/user/${drop.author.username}`} className="font-semibold text-accent">{drop.author.displayName}</Link>
               </span>
               <div className="relative z-10 flex shrink-0 items-center gap-1.5">
                 <LikeButton dropId={drop.id} liked={drop.likedByMe} likeCount={drop.likesCount} />
