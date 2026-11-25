@@ -55,7 +55,7 @@ export default async function DropDetail(props: Props) {
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl font-bold text-primary sm:text-4xl">{drop.title}</h1>
               <p className="text-sm text-muted-foreground">
-                par <span className="font-semibold text-accent">{drop.author.displayName}</span>
+                par <Link href={`/user/${drop.author.username}`} className="font-semibold text-accent">{drop.author.displayName}</Link>
                 {drop.isMine && " (toi)"}
               </p>
             </div>

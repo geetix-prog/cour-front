@@ -2,6 +2,7 @@
 import type { Comment } from "@/lib/api/types";
 import { useComment } from "@/lib/hooks/use-comment";
 import DeleteCommentButton from "./DeleteCommentButton";
+import Link from "next/link";
 
 type Props = {
   dropId: number;
@@ -22,10 +23,10 @@ export default function LiveCommentList({ dropId, initial }: Props) {
           {items.map((comment) => (
             <li key={comment.id} className="rounded-lg border border-border bg-background/50 p-4">
               <div className="flex items-center justify-between gap-4 text-sm">
-                <span className="font-semibold text-accent">
+                <Link href={`/user/${comment.author.username}`} className="font-semibold text-accent">
                   {comment.author.displayName}
                   {comment.isMine && <span className="font-normal text-muted-foreground"> (toi)</span>}
-                </span>
+                </Link>
                 <div className="flex items-center gap-2">
                   <time dateTime={comment.createdAt} className="text-xs text-muted-foreground">
                     {new Date(comment.createdAt).toLocaleDateString("fr-FR", {
