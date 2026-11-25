@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 export default function Drops({ searchParams }: PageProps<"/drops">) {
   const category = searchParams.then((params) => params.category);
   const q = searchParams.then((params) => params.q);
+  const page = searchParams.then((params) => params.page);
 
   return (
     <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -36,7 +37,7 @@ export default function Drops({ searchParams }: PageProps<"/drops">) {
             <DropsMap style="h-80 w-full lg:h-96" />
           </Suspense>
           <Suspense fallback={<p className="text-sm text-muted-foreground">Chargement des drops...</p>}>
-            <DropList category={category} q={q} />
+            <DropList category={category} q={q} page={page} />
           </Suspense>
         </div>
       </div>

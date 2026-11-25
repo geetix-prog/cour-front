@@ -1,8 +1,9 @@
 import ProfilUserDetail from "@/components/ProfilUserDetail"
 import { Suspense } from "react"
 
-export default function UsersProfils({ params }: PageProps<"/user/[name]">) {
+export default function UsersProfils({ params, searchParams }: PageProps<"/user/[name]">) {
     const name = params.then((p) => p.name);
+    const page = searchParams.then((p) => p.page);
 
     return (
         <div className="mx-10 my-5 flex flex-col items-center space-y-5">
@@ -13,7 +14,7 @@ export default function UsersProfils({ params }: PageProps<"/user/[name]">) {
                 </span>
             </h1>
             <Suspense fallback={<p className="text-sm text-muted-foreground">Chargement du profil...</p>}>
-                <ProfilUserDetail name={name} />
+                <ProfilUserDetail name={name} page={page} />
             </Suspense>
         </div>
     )

@@ -11,6 +11,7 @@ export default function CategoryButtons({ items }: Props) {
 
   function handleSelect(categoryId: string | null) {
     const params = new URLSearchParams(searchParams);
+    params.delete("page");
     if (categoryId) params.set("category", categoryId);
     else params.delete("category");
     router.push(`/drops?${params}`);

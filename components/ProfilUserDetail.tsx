@@ -4,6 +4,7 @@ import DropList from "./DropList";
 
 interface Props {
     name: Promise<string>,
+    page?: Promise<string | string[] | undefined>,
 }
 
 export default async function ProfilUserDetail(props: Props) {
@@ -15,7 +16,7 @@ export default async function ProfilUserDetail(props: Props) {
                 <ProfilUser user={user} />
             </div>
             <div className="w-1/2">
-                <DropList author={user.username} />
+                <DropList author={user.username} page={props.page} />
             </div>
         </div>
     )

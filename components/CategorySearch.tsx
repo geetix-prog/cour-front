@@ -9,6 +9,7 @@ export default function CategorySearch() {
 
   function handleSearch(value: string) {
     const params = new URLSearchParams(searchParams);
+    params.delete("page");
     if (value) params.set("q", value);
     else params.delete("q");
     router.replace(`/drops?${params}`);

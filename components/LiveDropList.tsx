@@ -14,7 +14,7 @@ type Props = {
 
 export default function LiveDropList({ initial, filter }: Props) {
   const items = useDrops(initial, filter);
-
+  console.log("salut")
   if (items.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
