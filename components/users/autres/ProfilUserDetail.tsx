@@ -1,6 +1,6 @@
 import { getUser } from "@/lib/api/user"
 import ProfilUser from "./ProfilUser";
-import DropList from "./DropList";
+import DropList from "../../drops/list/DropList";
 
 interface Props {
     name: Promise<string>,

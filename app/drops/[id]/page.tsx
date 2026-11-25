@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import DropDetail from "@/components/DropDetail";
+import DropDetail from "@/components/drops/list/DropDetail";
 
 export default function Drop({ params }: PageProps<"/drops/[id]">) {
   const id = params.then((p) => p.id);

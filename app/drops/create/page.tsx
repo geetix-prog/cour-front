@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import CreateForm from "@/components/CreateForm";
+import CreateForm from "@/components/drops/create/CreateForm";
 import { getCategories } from "@/lib/api/categories";
 
 export default function CreateDrop() {

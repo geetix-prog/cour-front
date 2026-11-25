@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import SiteHeader from "@/components/SiteHeader";
+import SiteHeader from "@/components/interface/SiteHeader";
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 

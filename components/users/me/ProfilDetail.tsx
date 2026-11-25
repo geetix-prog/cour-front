@@ -1,6 +1,6 @@
 import { getMe } from "@/lib/api/user";
 import ProfilForm from "./ProfilForm";
-import DropList from "./DropList";
+import DropList from "../../drops/list/DropList";
 
 type Props = {
   page?: Promise<string | string[] | undefined>;

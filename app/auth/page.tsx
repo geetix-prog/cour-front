@@ -7,7 +7,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import SessionExpiredNotice from "@/components/SessionExpiredNotice";
+import SessionExpiredNotice from "@/components/interface/SessionExpiredNotice";
 
 export default function Auth() {
   const [loginState, loginAction, loginPending] = useActionState(login, {} as ActionState);

@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import LikeButton from "./LikeButton";
-import DislikeButton from "./DislikeButton";
-import LikesCount from "./LikesCount";
-import DislikesCount from "./DislikesCount";
-import CommentList from "./CommentList";
-import CommentForm from "./CommentForm";
-import EditDropButton from "./EditDropButton";
-import DeleteDropButton from "./DeleteDropButton";
-import PresenceWidget from "./PresenceWidget";
-import DropMap from "./DropMap";
+import LikeButton from "../likes/LikeButton";
+import DislikeButton from "../dislikes/DislikeButton";
+import LikesCount from "../likes/LikesCount";
+import DislikesCount from "../dislikes/DislikesCount";
+import CommentList from "../comments/CommentList";
+import CommentForm from "../comments/CommentForm";
+import EditDropButton from "../edit/EditDropButton";
+import DeleteDropButton from "../delete/DeleteDropButton";
+import PresenceWidget from "../viewer/PresenceWidget";
+import DropMap from "../../maps/DropMap";
 import { getDrop } from "@/lib/api/drops";
 import { getCategories } from "@/lib/api/categories";
 

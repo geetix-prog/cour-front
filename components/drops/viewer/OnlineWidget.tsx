@@ -1,7 +1,7 @@
 "use client";
 
 import { useOnline } from "@/lib/hooks/use-online";
-import ViewerOnline from "./ViewerOnline";
+import ViewerOnline from "@/components/interface/ViewerOnline";
 
 export default function OnlineWidget() {
     const users = useOnline();

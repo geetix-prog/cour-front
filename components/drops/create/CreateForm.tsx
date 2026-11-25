@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import AddMapPoint, { type LatLng } from "@/components/AddMapPoint";
+import AddMapPoint, { type LatLng } from "@/components/maps/AddMapPoint";
 
 type Props = {
   categories: Promise<Category[]>;

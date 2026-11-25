@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Drop } from "@/lib/api/types";
 import { useDrops, type DropFilter } from "@/lib/hooks/use-drops";
 import mapPoint from "@/app/assets/mapPoint.png";
-import LikeButton from "./LikeButton";
-import DislikeButton from "./DislikeButton";
+import LikeButton from "../likes/LikeButton";
+import DislikeButton from "../dislikes/DislikeButton";
 
 type Props = {
   initial: Drop[];

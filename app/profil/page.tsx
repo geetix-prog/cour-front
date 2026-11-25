@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ProfilDetail from "@/components/ProfilDetail";
+import ProfilDetail from "@/components/users/me/ProfilDetail";
 
 export default function Profil({ searchParams }: PageProps<"/profil">) {
   const page = searchParams.then((params) => params.page);

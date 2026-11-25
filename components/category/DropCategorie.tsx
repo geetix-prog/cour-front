@@ -1,6 +1,6 @@
 import type { Category } from "@/lib/api/types";
 import { getCategories } from "@/lib/api/categories";
-import CategoryButtons from "@/components/CategoryButtons";
+import CategoryButtons from "@/components/category/CategoryButtons";
 
 export default async function DropCategorie() {
   const items: Category[] = await getCategories();

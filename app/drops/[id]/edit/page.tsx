@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import EditDrop from "@/components/EditDrop";
+import EditDrop from "@/components/drops/edit/EditDrop";
 
 export default function EditDropPage({ params }: PageProps<"/drops/[id]/edit">) {
   const id = params.then((p) => p.id);

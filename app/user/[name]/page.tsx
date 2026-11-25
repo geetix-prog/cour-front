@@ -1,4 +1,4 @@
-import ProfilUserDetail from "@/components/ProfilUserDetail"
+import ProfilUserDetail from "@/components/users/autres/ProfilUserDetail"
 import { Suspense } from "react"
 
 export default function UsersProfils({ params, searchParams }: PageProps<"/user/[name]">) {

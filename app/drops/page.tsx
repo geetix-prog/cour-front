@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import DropList from "@/components/DropList";
-import CategorySearch from "@/components/CategorySearch";
-import DropCategorie from "@/components/DropCategorie";
-import OnlineWidget from "@/components/OnlineWidget";
-import DropsMap from "@/components/DropsMap";
+import DropList from "@/components/drops/list/DropList";
+import CategorySearch from "@/components/category/CategorySearch";
+import DropCategorie from "@/components/category/DropCategorie";
+import OnlineWidget from "@/components/drops/viewer/OnlineWidget";
+import DropsMap from "@/components/maps/DropsMap";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function Drops({ searchParams }: PageProps<"/drops">) {
