@@ -12,6 +12,16 @@ export type Comment = S["Comment"] & {
   parentId: number | null;
   deleted: boolean;
   repliesCount: number;
+  likesCount: number;
+  dislikesCount: number;
+  likedByMe: boolean;
+  dislikedByMe: boolean;
+};
+export type CommentReactionState = {
+  liked: boolean;
+  disliked: boolean;
+  likesCount: number;
+  dislikesCount: number;
 };
 export type CommentPage = Omit<S["CommentPage"], "items"> & { items: Comment[] };
 export type PublicUser = S["PublicUser"];

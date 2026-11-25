@@ -4,6 +4,7 @@ import type { Comment } from "@/lib/api/types";
 import { useReplies } from "@/lib/hooks/use-replies";
 import CommentBody from "./CommentBody";
 import ReplyForm from "./ReplyForm";
+import CommentReactions from "./CommentReactions";
 
 type Props = {
   comment: Comment;
@@ -26,7 +27,8 @@ export default function CommentItem({ comment }: Props) {
     <li className="rounded-lg border border-border bg-background/50 p-4">
       <CommentBody comment={comment} />
 
-      <div className="mt-2 flex items-center gap-4">
+      <div className="mt-2 flex flex-wrap items-center gap-4">
+        {!comment.deleted && <CommentReactions comment={comment} />}
         {!comment.deleted && (
           <button type="button" className={linkButton} onClick={() => setReplyTo("")}>
             Répondre
@@ -56,13 +58,12 @@ export default function CommentItem({ comment }: Props) {
             <li key={reply.id}>
               <CommentBody comment={reply} />
               {!reply.deleted && (
-                <button
-                  type="button"
-                  className={`${linkButton} mt-1`}
-                  onClick={() => setReplyTo(reply.author.username)}
-                >
-                  Répondre
-                </button>
+                <div className="mt-2 flex flex-wrap items-center gap-4">
+                  <CommentReactions comment={reply} />
+                  <button type="button" className={linkButton} onClick={() => setReplyTo(reply.author.username)}>
+                    Répondre
+                  </button>
+                </div>
               )}
             </li>
           ))}

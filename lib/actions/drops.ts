@@ -5,7 +5,7 @@ import { requireSession } from "../session";
 import { apiDelete, apiPatch, apiPost } from "../api/client";
 import { actionError, type ActionState } from "../api/errors";
 import { getCommentReplies } from "../api/drops";
-import type { Comment, CommentPage } from "../api/types";
+import type { Comment, CommentPage, CommentReactionState } from "../api/types";
 
 export type { ActionState };
 
@@ -92,6 +92,26 @@ export async function replyToComment(
   try {
     const comment = await apiPost<Comment>(`/drops/${dropId}/comments`, { content, parentId });
     return { comment };
+  } catch (error) {
+    return actionError(error);
+  }
+}
+
+export type CommentReaction = "like" | "dislike";
+export type ReactionResult = ActionState & { reaction?: CommentReactionState };
+
+export async function toggleCommentReaction(
+  commentId: number,
+  reaction: CommentReaction,
+  active: boolean,
+): Promise<ReactionResult> {
+  await requireSession();
+  const path = `/comments/${commentId}/${reaction}`;
+  try {
+    const state = active
+      ? await apiDelete<CommentReactionState>(path)
+      : await apiPost<CommentReactionState>(path);
+    return { reaction: state };
   } catch (error) {
     return actionError(error);
   }
